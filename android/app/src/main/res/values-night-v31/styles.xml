@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Tea intentionally keeps its paper-cream visual language in system dark mode. -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <item name="android:windowBackground">@drawable/launch_background</item>
-        <item name="android:colorAccent">@color/tea_line</item>
+        <item name="android:windowSplashScreenBackground">@color/tea_cream</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/tea_cream</item>
+        <item name="android:windowBackground">@color/tea_cream</item>
     </style>
 
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@color/tea_cream</item>
-        <item name="android:colorAccent">@color/tea_line</item>
         <item name="android:navigationBarColor">@color/tea_cream</item>
         <item name="android:statusBarColor">@color/tea_cream</item>
         <item name="android:windowLightStatusBar">true</item>

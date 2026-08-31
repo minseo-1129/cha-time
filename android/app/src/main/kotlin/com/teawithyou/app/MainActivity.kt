@@ -1,4 +1,4 @@
-package com.example.doodle
+package com.teawithyou.app
 
 import io.flutter.embedding.android.FlutterActivity
 
