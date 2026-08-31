@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -116,6 +117,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
 
   int _typingGeneration = 0;
   bool _isReady = false;
+  bool _turnInProgress = false;
 
   static const List<String> _responses = [
     '그랬구나.',
@@ -211,8 +213,10 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
 
     _lastUserMessage = session.lastUserMessage;
 
-    if (_phase == SessionPhase.finished ||
-        _phase == SessionPhase.emptyCup) {
+    if (_phase == SessionPhase.finished) {
+      _systemText = '내일 또 들러줘.';
+      _lastUserMessage = '';
+    } else if (_phase == SessionPhase.emptyCup) {
       _systemText = '';
       _lastUserMessage = '';
     } else if (session.systemText.isNotEmpty) {
@@ -318,8 +322,8 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
     return '$day ${months[month - 1]}';
   }
 
-  void _sendMessage() {
-    if (_phase != SessionPhase.chatting) return;
+  Future<void> _sendMessage() async {
+    if (_phase != SessionPhase.chatting || _turnInProgress) return;
 
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -329,27 +333,40 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
     final response = _responses[_random.nextInt(_responses.length)];
     final generation = ++_typingGeneration;
 
+    // 1. The user's words arrive first and get a quiet moment on screen.
     setState(() {
       _lastUserMessage = text;
       _systemText = '';
-      _sipCount = min(_maxSips, _sipCount + 1);
+      _turnInProgress = true;
     });
 
     _controller.clear();
     _focusNode.requestFocus();
+    _queueSave();
+
+    await Future.delayed(
+      const Duration(milliseconds: 340),
+    );
+
+    if (!mounted || generation != _typingGeneration) return;
+
+    // 2. Only then does the tea level change.
+    setState(() {
+      _sipCount = min(_maxSips, _sipCount + 1);
+    });
 
     _queueSave();
 
-    Future.delayed(
-      const Duration(milliseconds: 300),
-      () {
-        if (!mounted || generation != _typingGeneration) return;
+    await Future.delayed(
+      const Duration(milliseconds: 430),
+    );
 
-        _typeSystemText(
-          response,
-          generation,
-        );
-      },
+    if (!mounted || generation != _typingGeneration) return;
+
+    // 3. After another small breath, the system begins speaking.
+    await _typeSystemText(
+      response,
+      generation,
     );
   }
 
@@ -384,7 +401,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       _focusNode.unfocus();
 
       await Future.delayed(
-        const Duration(milliseconds: 280),
+        const Duration(milliseconds: 520),
       );
 
       if (!mounted || generation != _typingGeneration) return;
@@ -393,9 +410,19 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
         _phase = SessionPhase.emptyCup;
         _systemText = '';
         _lastUserMessage = '';
+        _turnInProgress = false;
       });
 
       _queueSave();
+      return;
+    }
+
+    if (mounted &&
+        generation == _typingGeneration &&
+        _phase == SessionPhase.chatting) {
+      setState(() {
+        _turnInProgress = false;
+      });
     }
   }
 
@@ -404,14 +431,14 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
         character == ',' ||
         character == '!' ||
         character == '?') {
-      return 140 + _random.nextInt(70);
+      return 190 + _random.nextInt(60);
     }
 
     if (character == ' ') {
-      return 45 + _random.nextInt(30);
+      return 60 + _random.nextInt(40);
     }
 
-    return 75 + _random.nextInt(55);
+    return 95 + _random.nextInt(55);
   }
 
   void _refillTea() {
@@ -424,14 +451,15 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       _phase = SessionPhase.chatting;
       _systemText = '';
       _lastUserMessage = '';
+      _turnInProgress = false;
     });
 
     _queueSave();
     _focusNode.requestFocus();
   }
 
-  void _finishSession() {
-    _typingGeneration++;
+  Future<void> _finishSession() async {
+    final generation = ++_typingGeneration;
     _controller.clear();
     _focusNode.unfocus();
 
@@ -440,6 +468,24 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       _endedAtIso = DateTime.now().toIso8601String();
       _systemText = '';
       _lastUserMessage = '';
+      _turnInProgress = false;
+    });
+
+    _queueSave();
+
+    // Let the saucer and blossom settle before the goodbye line arrives.
+    await Future.delayed(
+      const Duration(milliseconds: 620),
+    );
+
+    if (!mounted ||
+        generation != _typingGeneration ||
+        _phase != SessionPhase.finished) {
+      return;
+    }
+
+    setState(() {
+      _systemText = '내일 또 들러줘.';
     });
 
     _queueSave();
@@ -493,10 +539,10 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       child: IconButton(
         onPressed: _returnToCalendar,
         tooltip: 'Calendar',
-        icon: const Icon(
-          Icons.calendar_today_outlined,
-          size: 19,
-          color: Color(0xFFA69D93),
+        icon: SvgPicture.asset(
+          'assets/icons/calendar.svg',
+          width: 20,
+          height: 20,
         ),
       ),
     );
@@ -538,19 +584,36 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
               width: 290,
               height: 50,
               child: Center(
-                child: Text(
-                  _phase == SessionPhase.emptyCup
-                      ? '잔이 비었어요'
-                      : _systemText,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    height: 1.55,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF8E847B),
-                  ),
-                ),
+                child: _phase == SessionPhase.finished
+                    ? AnimatedOpacity(
+                        opacity: _systemText.isEmpty ? 0 : 1,
+                        duration: const Duration(milliseconds: 360),
+                        curve: Curves.easeOut,
+                        child: Text(
+                          _systemText,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            height: 1.55,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF9A8F85),
+                          ),
+                        ),
+                      )
+                    : Text(
+                        _phase == SessionPhase.emptyCup
+                            ? '잔이 비었어요'
+                            : _systemText,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          height: 1.55,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF8E847B),
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 14),
@@ -655,11 +718,18 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
               ),
             ),
             IconButton(
-              onPressed: _sendMessage,
-              icon: const Icon(
-                Icons.arrow_upward_rounded,
-                size: 20,
-                color: Color(0xFF81786F),
+              onPressed: _turnInProgress
+                  ? null
+                  : () {
+                      _sendMessage();
+                    },
+              icon: Opacity(
+                opacity: _turnInProgress ? 0.38 : 1,
+                child: SvgPicture.asset(
+                  'assets/icons/send_arrow.svg',
+                  width: 20,
+                  height: 20,
+                ),
               ),
             ),
           ],
@@ -785,8 +855,8 @@ class TeaBowl extends StatelessWidget {
     return SizedBox(
       width: 225,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 220),
-        switchInCurve: Curves.easeOut,
+        duration: const Duration(milliseconds: 420),
+        switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeIn,
         child: Image.asset(
           _assetPath,
@@ -1049,7 +1119,7 @@ class _TeaCalendarHomeScreenState
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             28,
-            26,
+            54,
             28,
             24,
           ),
@@ -1057,7 +1127,7 @@ class _TeaCalendarHomeScreenState
             children: [
               _buildHeader(),
 
-              const SizedBox(height: 46),
+              const SizedBox(height: 54),
 
               _buildWeekdays(),
 
@@ -1104,16 +1174,14 @@ class _TeaCalendarHomeScreenState
         ),
 
         _MonthArrowButton(
-          icon:
-              Icons.chevron_left_rounded,
+          assetPath: 'assets/icons/chevron_left.svg',
           onPressed: _previousMonth,
         ),
 
         const SizedBox(width: 4),
 
         _MonthArrowButton(
-          icon:
-              Icons.chevron_right_rounded,
+          assetPath: 'assets/icons/chevron_right.svg',
           onPressed: _nextMonth,
         ),
       ],
@@ -1220,11 +1288,11 @@ class _TeaCalendarHomeScreenState
 
 class _MonthArrowButton
     extends StatelessWidget {
-  final IconData icon;
+  final String assetPath;
   final VoidCallback onPressed;
 
   const _MonthArrowButton({
-    required this.icon,
+    required this.assetPath,
     required this.onPressed,
   });
 
@@ -1237,11 +1305,10 @@ class _MonthArrowButton
         onPressed: onPressed,
         padding: EdgeInsets.zero,
         splashRadius: 19,
-        icon: Icon(
-          icon,
-          size: 24,
-          color:
-              const Color(0xFFA69D93),
+        icon: SvgPicture.asset(
+          assetPath,
+          width: 22,
+          height: 22,
         ),
       ),
     );
