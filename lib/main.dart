@@ -2,11 +2,71 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await TeaFonts.loadVoice();
   runApp(const TeaApp());
+}
+
+class TeaFonts {
+  static const String voiceFamily = 'TeaVoice';
+  static bool _voiceLoaded = false;
+
+  static String? get voice =>
+      _voiceLoaded ? voiceFamily : null;
+
+  static Future<void> loadVoice() async {
+    try {
+      final manifest =
+          await AssetManifest.loadFromAssetBundle(
+        rootBundle,
+      );
+
+      final candidates = manifest
+          .listAssets()
+          .where(
+            (path) =>
+                path.startsWith('assets/fonts/') &&
+                (path.toLowerCase().endsWith('.ttf') ||
+                    path.toLowerCase().endsWith('.otf')),
+          )
+          .toList();
+
+      if (candidates.isEmpty) {
+        return;
+      }
+
+      candidates.sort((a, b) {
+        int score(String path) {
+          final lower = path.toLowerCase();
+          var value = 0;
+
+          if (lower.contains('2025')) value -= 30;
+          if (lower.contains('kyobo')) value -= 20;
+          if (lower.endsWith('.ttf')) value -= 10;
+
+          return value;
+        }
+
+        return score(a).compareTo(score(b));
+      });
+
+      final loader = FontLoader(voiceFamily);
+      loader.addFont(
+        rootBundle.load(candidates.first),
+      );
+
+      await loader.load();
+      _voiceLoaded = true;
+    } catch (error) {
+      debugPrint(
+        'Could not load Tea voice font: $error',
+      );
+    }
+  }
 }
 
 class TeaApp extends StatelessWidget {
@@ -534,16 +594,15 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
 
   Widget _buildCalendarButton() {
     return Positioned(
-      top: 8,
-      right: 12,
-      child: IconButton(
-        onPressed: _returnToCalendar,
-        tooltip: 'Calendar',
-        icon: SvgPicture.asset(
-          'assets/icons/calendar.svg',
-          width: 20,
-          height: 20,
-        ),
+      top: 6,
+      right: 10,
+      child: _PngAssetButton(
+        assetPath:
+            'assets/ui/calendar_default.png',
+        onTap: _returnToCalendar,
+        semanticsLabel: 'Calendar',
+        visualSize: 34,
+        hitSize: 48,
       ),
     );
   }
@@ -593,7 +652,8 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                           _systemText,
                           textAlign: TextAlign.center,
                           maxLines: 2,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            fontFamily: TeaFonts.voice,
                             fontSize: 17,
                             height: 1.55,
                             fontWeight: FontWeight.w400,
@@ -607,7 +667,8 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                             : _systemText,
                         textAlign: TextAlign.center,
                         maxLines: 2,
-                        style: const TextStyle(
+                        style: TextStyle(
+                          fontFamily: TeaFonts.voice,
                           fontSize: 17,
                           height: 1.55,
                           fontWeight: FontWeight.w400,
@@ -705,32 +766,35 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                   height: 1.4,
                   color: Color(0xFF514B45),
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: '천천히 생각나는 대로',
                   hintStyle: TextStyle(
-                    color: Color(0xFFB8ADA3),
+                    fontFamily: TeaFonts.voice,
+                    color: const Color(
+                      0xFFB8ADA3,
+                    ),
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding:
+                      const EdgeInsets.symmetric(
                     vertical: 15,
                   ),
                 ),
               ),
             ),
-            IconButton(
-              onPressed: _turnInProgress
+            _PngAssetButton(
+              assetPath:
+                  'assets/ui/send_default.png',
+              disabledAssetPath:
+                  'assets/ui/send_disabled.png',
+              onTap: _turnInProgress
                   ? null
                   : () {
                       _sendMessage();
                     },
-              icon: Opacity(
-                opacity: _turnInProgress ? 0.38 : 1,
-                child: SvgPicture.asset(
-                  'assets/icons/send_arrow.svg',
-                  width: 20,
-                  height: 20,
-                ),
-              ),
+              semanticsLabel: 'Send',
+              visualSize: 48,
+              hitSize: 50,
             ),
           ],
         ),
@@ -782,9 +846,10 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                   ),
                   shape: const StadiumBorder(),
                 ),
-                child: const Text(
+                child: Text(
                   '한 잔 더 마실래',
                   style: TextStyle(
+                    fontFamily: TeaFonts.voice,
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
@@ -806,9 +871,10 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                   ),
                   shape: const StadiumBorder(),
                 ),
-                child: const Text(
+                child: Text(
                   '오늘 이만 마칠래',
                   style: TextStyle(
+                    fontFamily: TeaFonts.voice,
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
@@ -1174,14 +1240,14 @@ class _TeaCalendarHomeScreenState
         ),
 
         _MonthArrowButton(
-          assetPath: 'assets/icons/chevron_left.svg',
+          assetPath: 'assets/ui/calendar_prev_default.png',
           onPressed: _previousMonth,
         ),
 
         const SizedBox(width: 4),
 
         _MonthArrowButton(
-          assetPath: 'assets/icons/chevron_right.svg',
+          assetPath: 'assets/ui/calendar_next_default.png',
           onPressed: _nextMonth,
         ),
       ],
@@ -1298,17 +1364,99 @@ class _MonthArrowButton
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 38,
-      height: 38,
-      child: IconButton(
-        onPressed: onPressed,
-        padding: EdgeInsets.zero,
-        splashRadius: 19,
-        icon: SvgPicture.asset(
-          assetPath,
-          width: 22,
-          height: 22,
+    return _PngAssetButton(
+      assetPath: assetPath,
+      onTap: onPressed,
+      visualSize: 38,
+      hitSize: 42,
+    );
+  }
+}
+
+class _PngAssetButton
+    extends StatefulWidget {
+  final String assetPath;
+  final String? disabledAssetPath;
+  final VoidCallback? onTap;
+  final String? semanticsLabel;
+  final double visualSize;
+  final double hitSize;
+
+  const _PngAssetButton({
+    required this.assetPath,
+    required this.onTap,
+    required this.visualSize,
+    required this.hitSize,
+    this.disabledAssetPath,
+    this.semanticsLabel,
+  });
+
+  @override
+  State<_PngAssetButton> createState() =>
+      _PngAssetButtonState();
+}
+
+class _PngAssetButtonState
+    extends State<_PngAssetButton> {
+  bool _pressed = false;
+
+  bool get _enabled => widget.onTap != null;
+
+  void _setPressed(bool value) {
+    if (!_enabled || _pressed == value) return;
+
+    setState(() {
+      _pressed = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final imagePath = !_enabled &&
+            widget.disabledAssetPath != null
+        ? widget.disabledAssetPath!
+        : widget.assetPath;
+
+    return Semantics(
+      button: true,
+      enabled: _enabled,
+      label: widget.semanticsLabel,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.onTap,
+        onTapDown: _enabled
+            ? (_) => _setPressed(true)
+            : null,
+        onTapUp: _enabled
+            ? (_) => _setPressed(false)
+            : null,
+        onTapCancel: _enabled
+            ? () => _setPressed(false)
+            : null,
+        child: SizedBox(
+          width: widget.hitSize,
+          height: widget.hitSize,
+          child: Center(
+            child: AnimatedScale(
+              scale: _pressed ? 0.94 : 1,
+              duration: const Duration(
+                milliseconds: 110,
+              ),
+              curve: Curves.easeOutCubic,
+              child: AnimatedOpacity(
+                opacity: _pressed ? 0.82 : 1,
+                duration: const Duration(
+                  milliseconds: 90,
+                ),
+                child: Image.asset(
+                  imagePath,
+                  width: widget.visualSize,
+                  height: widget.visualSize,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
