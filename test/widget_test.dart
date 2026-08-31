@@ -1,30 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:doodle/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Tea session record round-trips JSON', () {
+    const record = TeaSessionRecord(
+      dateStarted: '2026-08-31',
+      startedAt: '2026-08-31T20:00:00.000',
+      endedAt: null,
+      sipCount: 2,
+      cupsServed: 1,
+      finished: false,
+      phase: 'chatting',
+      systemText: '응, 듣고 있어.',
+      lastUserMessage: '오늘은 괜찮았어.',
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final restored =
+        TeaSessionRecord.fromJson(record.toJson());
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(restored.dateStarted, record.dateStarted);
+    expect(restored.startedAt, record.startedAt);
+    expect(restored.endedAt, record.endedAt);
+    expect(restored.sipCount, record.sipCount);
+    expect(restored.cupsServed, record.cupsServed);
+    expect(restored.finished, record.finished);
+    expect(restored.phase, record.phase);
+    expect(restored.systemText, record.systemText);
+    expect(
+      restored.lastUserMessage,
+      record.lastUserMessage,
+    );
   });
 }
