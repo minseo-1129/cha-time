@@ -4,10 +4,10 @@
 
 - App name: `Tea`
 - Application ID: `com.teawithyou.app`
-- Version: read from `pubspec.yaml`
+- Version: `1.0.0+1`
 - App data remains local on-device.
 
-> Changing the application ID makes Android treat this as a different app from the earlier `com.example.doodle` development build. Existing local test data from that development package does not migrate automatically.
+> The application ID is now fixed for Play release. Do not change `com.teawithyou.app` after the first Play Console upload.
 
 ## 1. Create the upload keystore once
 
@@ -22,11 +22,17 @@ keytool -genkeypair -v \
   -alias upload
 ```
 
-Keep this keystore safe. Do not commit it.
+Choose a password you can store safely. The keystore is needed for future uploads, so back it up somewhere secure.
 
 ## 2. Create android/key.properties
 
-Copy `android/key.properties.example` to `android/key.properties` and replace the passwords:
+Copy the example:
+
+```bash
+cp android/key.properties.example android/key.properties
+```
+
+Then edit `android/key.properties`:
 
 ```properties
 storePassword=YOUR_STORE_PASSWORD
@@ -35,24 +41,22 @@ keyAlias=upload
 storeFile=../upload-keystore.jks
 ```
 
-Both `android/key.properties` and `*.jks` are already ignored by Git.
+Both `android/key.properties` and `*.jks` are ignored by Git.
 
-## 3. Verify locally
+## 3. Build the release bundle
 
-```bash
-flutter clean
-flutter pub get
-flutter analyze
-flutter run -d R3CWC0JDAER
-```
-
-Because the application ID changed, Android may install Tea as a new app alongside the old development build.
-
-## 4. Build the Play bundle
+Once the two private signing files exist:
 
 ```bash
-flutter build appbundle --release
+bash scripts/build_release.sh
 ```
+
+The script runs:
+
+- `flutter clean`
+- `flutter pub get`
+- `flutter analyze`
+- `flutter build appbundle --release`
 
 Expected output:
 
@@ -60,10 +64,30 @@ Expected output:
 build/app/outputs/bundle/release/app-release.aab
 ```
 
-Before uploading a new Play build later, increment the build number in `pubspec.yaml`, e.g. `1.0.0+2`.
+## 4. Install/test locally before Play upload
+
+For normal device QA, continue using:
+
+```bash
+flutter run -d R3CWC0JDAER
+```
+
+The release bundle itself is for Play Console upload.
 
 ## 5. Closed testing
 
-Upload `app-release.aab` to the Google Play Console closed-testing track, complete the required store/data-safety declarations, add testers, and publish the closed-test release.
+Follow `PLAY_CONSOLE_CLOSED_TESTING.md`.
 
-The Play Store listing icon is a separate 512×512 asset from the launcher icon bundled in the Android app.
+Before every later Play build, increment the build number in `pubspec.yaml`, for example:
+
+```yaml
+version: 1.0.0+2
+```
+
+## Security
+
+Never commit or send:
+
+- `android/upload-keystore.jks`
+- `android/key.properties`
+- any keystore password
