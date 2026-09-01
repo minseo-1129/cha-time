@@ -1,34 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-
-    <!-- quiet East Asian tea bowl -->
-    <path
-        android:fillColor="#F0ECE3"
-        android:strokeColor="#81786F"
-        android:strokeWidth="2.1"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M29,46 C31,64 40,75 54,76 C68,75 77,64 79,46 Z" />
-
-    <!-- tea surface -->
-    <path
-        android:fillColor="#B8C09A"
-        android:strokeColor="#81786F"
-        android:strokeWidth="1.8"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:pathData="M31,46 C36,40 72,40 77,46 C72,52 36,52 31,46 Z" />
-
-    <!-- small blossom trace -->
-    <path
-        android:fillColor="#E7C3C6"
-        android:pathData="M74,35 C71,31 73,27 77,29 C78,25 83,25 83,30 C87,28 90,32 87,35 C91,37 89,42 85,40 C84,44 79,44 79,40 C75,42 71,39 74,35 Z" />
-
-    <path
-        android:fillColor="#81786F"
-        android:pathData="M80,35 m-1.4,0 a1.4,1.4 0,1 0,2.8,0 a1.4,1.4 0,1 0,-2.8,0" />
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap
+            android:src="@drawable/tea_launcher_v3"
+            android:gravity="fill"
+            android:filter="true" />
+    </item>
+</layer-list>
