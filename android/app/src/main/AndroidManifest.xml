@@ -2,8 +2,8 @@
     <application
         android:label="Tea"
         android:name="${applicationName}"
-        android:icon="@mipmap/tea_release_icon"
-        android:roundIcon="@mipmap/tea_release_icon">
+        android:icon="@mipmap/tea_release_icon_v5"
+        android:roundIcon="@mipmap/tea_release_icon_v5">
         <activity
             android:name=".MainActivity"
             android:exported="true"
