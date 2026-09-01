@@ -2,8 +2,9 @@
 <resources>
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowSplashScreenBackground">@color/tea_cream</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/tea_splash_v2</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/tea_splash_blank</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
         <item name="android:windowBackground">@color/tea_cream</item>
     </style>
 
