@@ -1187,7 +1187,7 @@ class _TeaCalendarHomeScreenState
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             28,
-            54,
+            6,
             28,
             24,
           ),
@@ -1195,7 +1195,11 @@ class _TeaCalendarHomeScreenState
             children: [
               _buildHeader(),
 
-              const SizedBox(height: 54),
+              const SizedBox(height: 12),
+
+              _buildIllustrationWindow(),
+
+              const SizedBox(height: 18),
 
               _buildWeekdays(),
 
@@ -1225,34 +1229,46 @@ class _TeaCalendarHomeScreenState
   }
 
   Widget _buildHeader() {
-    return Row(
-      crossAxisAlignment:
-          CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Text(
-            _monthTitle,
-            style: const TextStyle(
-              fontSize: 15,
-              letterSpacing: 1.8,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF81786F),
+    return SizedBox(
+      height: 48,
+      child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              _monthTitle,
+              style: const TextStyle(
+                fontSize: 15,
+                letterSpacing: 1.8,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF81786F),
+              ),
             ),
           ),
-        ),
 
-        _MonthArrowButton(
-          assetPath: 'assets/ui/calendar_prev_default.png',
-          onPressed: _previousMonth,
-        ),
+          _MonthArrowButton(
+            assetPath: 'assets/ui/calendar_prev_default.png',
+            onPressed: _previousMonth,
+          ),
 
-        const SizedBox(width: 4),
+          const SizedBox(width: 4),
 
-        _MonthArrowButton(
-          assetPath: 'assets/ui/calendar_next_default.png',
-          onPressed: _nextMonth,
-        ),
-      ],
+          _MonthArrowButton(
+            assetPath: 'assets/ui/calendar_next_default.png',
+            onPressed: _nextMonth,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIllustrationWindow() {
+    // Reserved breathing room for weather / seasonal motifs.
+    // Keep this visually empty until the seasonal system is introduced.
+    return const SizedBox(
+      height: 96,
+      width: double.infinity,
     );
   }
 
@@ -1500,20 +1516,20 @@ class _CalendarDayCell
               right: 0,
               child: Center(
                 child: Container(
-                  width: isToday ? 25 : null,
-                  height: isToday ? 25 : null,
+                  width: isToday ? 29 : null,
+                  height: isToday ? 29 : null,
                   alignment: Alignment.center,
                   decoration: isToday
                       ? BoxDecoration(
                           shape: BoxShape.circle,
                           color: const Color(
-                            0xFFE9ECD9,
+                            0xFFE1E7CB,
                           ),
                           border: Border.all(
                             color: const Color(
-                              0xFFD2D8B9,
+                              0xFFBEC99B,
                             ),
-                            width: 0.8,
+                            width: 1.1,
                           ),
                         )
                       : null,
@@ -1523,14 +1539,14 @@ class _CalendarDayCell
                         TextAlign.center,
                     style: TextStyle(
                       fontSize: isToday
-                          ? 11.5
+                          ? 12
                           : 11,
                       fontWeight: isToday
                           ? FontWeight.w600
                           : FontWeight.w400,
                       color: isToday
                           ? const Color(
-                              0xFF5F6252,
+                              0xFF586047,
                             )
                           : const Color(
                               0xFFA69D93,
@@ -1545,7 +1561,7 @@ class _CalendarDayCell
               Positioned(
                 top:
                     constraints.maxHeight *
-                        0.38,
+                        (isToday ? 0.48 : 0.38),
                 left: 0,
                 right: 0,
                 child: Center(
