@@ -3,7 +3,7 @@
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowSplashScreenBackground">@color/tea_cream</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_steam3</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">@color/tea_cream</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/tea_cream</item>
     </style>
 
