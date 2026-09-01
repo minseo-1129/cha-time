@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/tea_cream" />
-    <item android:drawable="@drawable/splash_steam3" />
+    <item>
+        <bitmap
+            android:src="@drawable/splash_steam3_art"
+            android:gravity="center"
+            android:filter="true" />
+    </item>
 </layer-list>

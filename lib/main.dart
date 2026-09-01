@@ -784,12 +784,19 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
                 ),
               ),
             ),
-            _OrganicSendButton(
+            _PngAssetButton(
+              assetPath:
+                  'assets/ui/send_default.png',
+              disabledAssetPath:
+                  'assets/ui/send_disabled.png',
               onTap: _turnInProgress
                   ? null
                   : () {
                       _sendMessage();
                     },
+              semanticsLabel: 'Send',
+              visualSize: 48,
+              hitSize: 50,
             ),
           ],
         ),
@@ -1365,147 +1372,6 @@ class _MonthArrowButton
       visualSize: 38,
       hitSize: 42,
     );
-  }
-}
-
-class _OrganicSendButton extends StatefulWidget {
-  final VoidCallback? onTap;
-
-  const _OrganicSendButton({
-    required this.onTap,
-  });
-
-  @override
-  State<_OrganicSendButton> createState() =>
-      _OrganicSendButtonState();
-}
-
-class _OrganicSendButtonState
-    extends State<_OrganicSendButton> {
-  bool _pressed = false;
-
-  bool get _enabled => widget.onTap != null;
-
-  void _setPressed(bool value) {
-    if (!_enabled || _pressed == value) return;
-
-    setState(() {
-      _pressed = value;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      enabled: _enabled,
-      label: 'Send',
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: widget.onTap,
-        onTapDown: _enabled
-            ? (_) => _setPressed(true)
-            : null,
-        onTapUp: _enabled
-            ? (_) => _setPressed(false)
-            : null,
-        onTapCancel: _enabled
-            ? () => _setPressed(false)
-            : null,
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: Center(
-            child: AnimatedScale(
-              scale: _pressed ? 0.94 : 1,
-              duration: const Duration(
-                milliseconds: 110,
-              ),
-              curve: Curves.easeOutCubic,
-              child: AnimatedOpacity(
-                opacity: _pressed ? 0.82 : 1,
-                duration: const Duration(
-                  milliseconds: 90,
-                ),
-                child: CustomPaint(
-                  size: const Size.square(48),
-                  painter: _OrganicSendPainter(
-                    enabled: _enabled,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OrganicSendPainter extends CustomPainter {
-  final bool enabled;
-
-  const _OrganicSendPainter({
-    required this.enabled,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(
-      size.width / 2,
-      size.height / 2,
-    );
-
-    final baseColor = enabled
-        ? const Color(0xFFB7D1E3)
-        : const Color(0xFFD8D4CE);
-
-    final wash = Paint()
-      ..style = PaintingStyle.fill;
-
-    wash.color = baseColor.withValues(alpha: 0.44);
-    canvas.drawCircle(
-      center.translate(-0.7, 0.4),
-      21.4,
-      wash,
-    );
-
-    wash.color = baseColor.withValues(alpha: 0.52);
-    canvas.drawCircle(
-      center.translate(0.8, -0.5),
-      20.8,
-      wash,
-    );
-
-    wash.color = baseColor.withValues(alpha: 0.58);
-    canvas.drawCircle(
-      center.translate(-0.2, -0.1),
-      20.1,
-      wash,
-    );
-
-    final arrow = Paint()
-      ..color = const Color(0xFFFAF7F2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.4
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    final path = Path()
-      ..moveTo(24, 34)
-      ..lineTo(24, 15)
-      ..moveTo(16.5, 22.5)
-      ..lineTo(24, 15)
-      ..lineTo(31.5, 22.5);
-
-    canvas.drawPath(path, arrow);
-  }
-
-  @override
-  bool shouldRepaint(
-    covariant _OrganicSendPainter oldDelegate,
-  ) {
-    return oldDelegate.enabled != enabled;
   }
 }
 
