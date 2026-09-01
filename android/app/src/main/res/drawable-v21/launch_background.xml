@@ -3,7 +3,7 @@
     <item android:drawable="@color/tea_cream" />
     <item>
         <bitmap
-            android:src="@drawable/splash_steam3_art"
+            android:src="@drawable/tea_splash_final"
             android:gravity="center"
             android:filter="true" />
     </item>

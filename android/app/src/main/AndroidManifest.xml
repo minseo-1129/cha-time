@@ -2,8 +2,8 @@
     <application
         android:label="Tea"
         android:name="${applicationName}"
-        android:icon="@drawable/tea_launcher_art"
-        android:roundIcon="@drawable/tea_launcher_art">
+        android:icon="@drawable/tea_launcher_final"
+        android:roundIcon="@drawable/tea_launcher_final">
         <activity
             android:name=".MainActivity"
             android:exported="true"
