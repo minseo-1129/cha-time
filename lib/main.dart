@@ -163,8 +163,11 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
   final Map<String, TeaSessionRecord> _sessions = {};
   Future<void> _saveQueue = Future<void>.value();
 
-  String _systemText = '오늘은 어떤 하루였어?';
+  String _systemText = '';
   String _lastUserMessage = '';
+
+  bool _showCup = false;
+  bool _needsOpeningSequence = false;
 
   int _sipCount = 0;
   int _cupsServed = 0;
@@ -247,6 +250,8 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
 
       if (sessionToRestore != null) {
         _restoreSession(sessionToRestore);
+      } else {
+        _needsOpeningSequence = true;
       }
     } catch (error) {
       debugPrint('Could not load tea session data: $error');
@@ -257,9 +262,57 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
     setState(() {
       _isReady = true;
     });
+
+    if (_needsOpeningSequence) {
+      _needsOpeningSequence = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _runOpeningSequence();
+      });
+    }
+  }
+
+  Future<void> _runOpeningSequence() async {
+    if (!mounted ||
+        _phase != SessionPhase.chatting ||
+        _activeSessionDate != null) {
+      return;
+    }
+
+    final generation = ++_typingGeneration;
+
+    setState(() {
+      _systemText = '';
+      _showCup = false;
+      _turnInProgress = true;
+    });
+
+    // A short untouched moment before the ritual appears.
+    await Future.delayed(
+      const Duration(milliseconds: 220),
+    );
+
+    if (!mounted || generation != _typingGeneration) return;
+
+    // The cup arrives first.
+    setState(() {
+      _showCup = true;
+    });
+
+    await Future.delayed(
+      const Duration(milliseconds: 520),
+    );
+
+    if (!mounted || generation != _typingGeneration) return;
+
+    // Only after the cup settles does Tea begin speaking.
+    await _typeSystemText(
+      '오늘은 어떤 하루였어?',
+      generation,
+    );
   }
 
   void _restoreSession(TeaSessionRecord session) {
+    _showCup = true;
     _activeSessionDate = session.dateStarted;
     _startedAtIso = session.startedAt;
     _endedAtIso = session.endedAt;
@@ -509,6 +562,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       _sipCount = 0;
       _cupsServed += 1;
       _phase = SessionPhase.chatting;
+      _showCup = true;
       _systemText = '';
       _lastUserMessage = '';
       _turnInProgress = false;
@@ -594,7 +648,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
 
   Widget _buildCalendarButton() {
     return Positioned(
-      top: 6,
+      top: 24,
       right: 10,
       child: _PngAssetButton(
         assetPath:
@@ -610,7 +664,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
   Widget _buildDate() {
     return Positioned(
       left: 28,
-      top: 22,
+      top: 40,
       child: Text(
         _displayDate,
         style: const TextStyle(
@@ -631,7 +685,7 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
       curve: Curves.easeOutCubic,
       left: 0,
       right: 0,
-      top: 78,
+      top: 96,
       bottom: keyboardOpen
           ? keyboardHeight + 38
           : 120,
@@ -678,18 +732,23 @@ class _TeaSessionScreenState extends State<TeaSessionScreen> {
               ),
             ),
             const SizedBox(height: 14),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 480),
-              switchInCurve: Curves.easeOutCubic,
-              switchOutCurve: Curves.easeInCubic,
-              child: _phase == SessionPhase.finished
-                  ? const ClosingTrace(
-                      key: ValueKey('closing'),
-                    )
-                  : TeaBowl(
-                      key: const ValueKey('tea'),
-                      sipCount: _sipCount,
-                    ),
+            AnimatedOpacity(
+              opacity: _showCup ? 1 : 0,
+              duration: const Duration(milliseconds: 360),
+              curve: Curves.easeOutCubic,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 480),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
+                child: _phase == SessionPhase.finished
+                    ? const ClosingTrace(
+                        key: ValueKey('closing'),
+                      )
+                    : TeaBowl(
+                        key: const ValueKey('tea'),
+                        sipCount: _sipCount,
+                      ),
+              ),
             ),
             const SizedBox(height: 0),
             SizedBox(
@@ -1187,7 +1246,7 @@ class _TeaCalendarHomeScreenState
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             28,
-            6,
+            24,
             28,
             24,
           ),
@@ -1195,11 +1254,11 @@ class _TeaCalendarHomeScreenState
             children: [
               _buildHeader(),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               _buildIllustrationWindow(),
 
-              const SizedBox(height: 18),
+              const SizedBox(height: 22),
 
               _buildWeekdays(),
 
@@ -1267,7 +1326,7 @@ class _TeaCalendarHomeScreenState
     // Reserved breathing room for weather / seasonal motifs.
     // Keep this visually empty until the seasonal system is introduced.
     return const SizedBox(
-      height: 96,
+      height: 112,
       width: double.infinity,
     );
   }
@@ -1281,8 +1340,9 @@ class _TeaCalendarHomeScreenState
               child: Text(
                 weekday,
                 style: const TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 0.5,
+                  fontSize: 10.5,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w500,
                   color: Color(0xFFB8ADA3),
                 ),
               ),
