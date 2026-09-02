@@ -4,35 +4,48 @@
 
 - App name: `Tea`
 - Application ID: `com.teawithyou.app`
-- Version: `1.0.0+1`
+- Version: `1.0.0+3`
 - App data remains local on-device.
 
-> The application ID is now fixed for Play release. Do not change `com.teawithyou.app` after the first Play Console upload.
+> The application ID is fixed for Play release. Do not change `com.teawithyou.app`.
 
-## 1. Create the upload keystore once
+## Current release-candidate status
 
-From Git Bash in the project root:
+The launcher icon is confirmed visible on the Samsung test device.
 
-```bash
-keytool -genkeypair -v \
-  -keystore android/upload-keystore.jks \
-  -keyalg RSA \
-  -keysize 2048 \
-  -validity 10000 \
-  -alias upload
-```
+The last release build before commit `f1cc9c4` failed during `:app:mergeReleaseResources` because obsolete corrupted PNG files still existed under Android `res/`.
 
-Choose a password you can store safely. The keystore is needed for future uploads, so back it up somewhere secure.
+Commit `f1cc9c4` removed those obsolete resources. A fresh post-cleanup release build still needs to be confirmed.
 
-## 2. Create android/key.properties
-
-Copy the example:
+Run:
 
 ```bash
-cp android/key.properties.example android/key.properties
+cd /c/dev/doodle
+git pull origin main
+bash scripts/build_release.sh
 ```
 
-Then edit `android/key.properties`:
+Only treat the bundle as release-ready after that command succeeds.
+
+## 1. Upload keystore
+
+The upload keystore is created once and stored locally:
+
+```text
+android/upload-keystore.jks
+```
+
+Back it up securely. Never commit it.
+
+## 2. android/key.properties
+
+Local-only file:
+
+```text
+android/key.properties
+```
+
+Expected shape:
 
 ```properties
 storePassword=YOUR_STORE_PASSWORD
@@ -41,11 +54,9 @@ keyAlias=upload
 storeFile=../upload-keystore.jks
 ```
 
-Both `android/key.properties` and `*.jks` are ignored by Git.
+Both the keystore and `key.properties` must remain out of Git.
 
 ## 3. Build the release bundle
-
-Once the two private signing files exist:
 
 ```bash
 bash scripts/build_release.sh
@@ -58,30 +69,60 @@ The script runs:
 - `flutter analyze`
 - `flutter build appbundle --release`
 
-Expected output:
+Expected artifact:
 
 ```text
 build/app/outputs/bundle/release/app-release.aab
 ```
 
-## 4. Install/test locally before Play upload
+## 4. Device QA
 
-For normal device QA, continue using:
+Known Android test device:
+
+```text
+R3CWC0JDAER
+```
+
+Normal QA:
 
 ```bash
 flutter run -d R3CWC0JDAER
 ```
 
-The release bundle itself is for Play Console upload.
+The AAB is for Play Console upload.
 
-## 5. Closed testing
+## 5. Launcher icon implementation
+
+The working launcher icon is generated at Android build time from base64 text chunks in:
+
+```text
+android/app/launcher_icon_base64/
+```
+
+Gradle generates:
+
+```text
+mipmap-nodpi/tea_release_icon_v5.png
+```
+
+The manifest points to:
+
+```text
+@mipmap/tea_release_icon_v5
+```
+
+Do not restore old `tea_launcher_*.png` or `tea_release_icon.png` files without first checking `docs/PROJECT_HANDOFF.md`.
+
+## 6. Closed testing
 
 Follow `PLAY_CONSOLE_CLOSED_TESTING.md`.
 
-Before every later Play build, increment the build number in `pubspec.yaml`, for example:
+For every later Play upload, increment the build number in `pubspec.yaml`.
+
+Example:
 
 ```yaml
-version: 1.0.0+2
+version: 1.0.0+4
 ```
 
 ## Security

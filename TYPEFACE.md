@@ -1,19 +1,36 @@
-# Tea typography — polish pass
+# Tea typography
 
-Preferred voice typeface: **교보 손글씨 2025 이유빈**
+Preferred Tea voice typeface: **교보문고 손글씨 2025 이유빈**
 
-The official Kyobo page describes it as a clean, spacious handwriting face and permits use across web/mobile and other media. Download the Windows TTF from the official Kyobo handwriting-font page, then place it locally at:
+## Current implementation
 
-`assets/fonts/KyoboHandwriting2025.ttf`
+Tea loads its voice font at runtime through `TeaFonts.loadVoice()` in `lib/main.dart`.
 
-Do not rename or commit a font until its exact downloaded filename/license package has been checked.
+The loader scans:
 
-Planned usage once the font file is present:
-- system response
-- empty-cup line: "잔이 비었어요"
-- closing line: "내일 또 들러줘."
+```text
+assets/fonts/
+```
+
+and prefers a 2025/Kyobo font file when available.
+
+Current voice-font usage includes:
+
+- system responses
+- opening prompt
+- submitted user text
+- input text
+- input hint
+- empty-cup line: `잔이 비었어요`
+- closing line: `내일 또 들러줘.`
 - action labels
 
-Calendar structure (month, weekday letters, day numbers) should remain a quiet sans-serif so the handwriting reads as the app's "voice", not as navigation chrome.
+Calendar structural typography (month, weekdays, day numbers) intentionally remains a quiet sans-serif so handwriting reads as Tea's voice rather than navigation chrome.
 
-Orbit remains an alternate experiment, not the current default. Its own project describes a geometric/coding-interface character, so it is better suited to a limited accent test than the whole Tea UI.
+Do not switch the whole calendar to handwriting.
+
+## Font-file caution
+
+Do not expose, redistribute, or commit a font file unless its license and exact source permit repository redistribution.
+
+See `docs/PROJECT_HANDOFF.md` for the current product/visual contract.

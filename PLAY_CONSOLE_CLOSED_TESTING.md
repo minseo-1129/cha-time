@@ -4,65 +4,68 @@
 
 - App name: Tea
 - Application ID: `com.teawithyou.app`
-- Version: `1.0.0+1`
+- Current version: `1.0.0+3`
 - Artifact: Android App Bundle (`.aab`)
 
-## Before the first upload
+## Before upload
 
-1. Pull the latest `main`.
-2. Create the upload keystore once.
-3. Create `android/key.properties`.
+1. Pull latest `main`.
+2. Read `docs/PROJECT_HANDOFF.md` for current release status.
+3. Confirm local upload signing files exist.
 4. Run:
    ```bash
    bash scripts/build_release.sh
    ```
-5. Confirm this file exists:
+5. Confirm:
    ```text
    build/app/outputs/bundle/release/app-release.aab
    ```
+6. Do not upload if the release build did not complete successfully.
 
-## Play Console setup
+## Play Console identity
 
-Create the app as **Tea** and use the package/application ID:
+Use:
 
 ```text
+Tea
 com.teawithyou.app
 ```
 
-Then complete the required setup screens before publishing the closed-test release:
+Complete all required Play Console setup/declaration screens that are shown for the account and app before publishing the closed-test release.
 
-- App details / default language
-- Store listing
-- App icon and screenshots
-- Privacy policy if required by the declarations you make
-- Data safety
-- App access
-- Ads declaration
-- Content rating
-- Target audience / age declarations
-- Any additional policy declarations shown by the Console
+Typical items include:
+
+- store listing
+- app details/default language
+- screenshots and app icon
+- privacy/data safety declarations
+- app access
+- ads declaration
+- content rating
+- target audience
+- any current Play policy declarations
 
 ## Closed test
 
-- Create a closed-testing track.
+- Create/use a closed-testing track.
 - Add the tester group/list.
 - Upload `app-release.aab`.
-- Add a short release note, for example:
+- Add a short release note, e.g.:
   `Tea v1.0 — first closed testing build.`
-- Review all warnings/errors.
-- Start the closed test only after the release is accepted by the Console.
+- Resolve blocking warnings/errors.
+- Start the test only after the release is accepted.
 
-## For every later upload
+## Every later upload
 
-Increment the build number in `pubspec.yaml`.
+Increment the Android build number in `pubspec.yaml`.
 
 Example:
 
 ```yaml
-version: 1.0.0+2
+version: 1.0.0+4
 ```
 
-Google Play will reject a second bundle that reuses the same Android version code.
+Google Play will reject a later bundle that reuses an existing version code.
 
 ## Keep private
 

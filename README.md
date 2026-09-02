@@ -1,17 +1,38 @@
-# doodle
+# Tea
 
-A new Flutter project.
+A quiet daily tea reflection ritual built with Flutter.
 
-## Getting Started
+## Start here
 
-This project is a starting point for a Flutter application.
+For project continuity, architecture, product behavior, release state, and the exact prompt to use in a new ChatGPT conversation, read:
 
-A few resources to get you started if this is your first Flutter project:
+- [docs/PROJECT_HANDOFF.md](docs/PROJECT_HANDOFF.md)
+- [RELEASE_ANDROID.md](RELEASE_ANDROID.md)
+- [PLAY_CONSOLE_CLOSED_TESTING.md](PLAY_CONSOLE_CLOSED_TESTING.md)
+- [TYPEFACE.md](TYPEFACE.md)
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Android identity
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- App name: `Tea`
+- Application ID: `com.teawithyou.app`
+- Current version: `1.0.0+3`
+
+## Run on the known test device
+
+```bash
+flutter run -d R3CWC0JDAER
+```
+
+## Build signed release bundle
+
+```bash
+bash scripts/build_release.sh
+```
+
+Expected artifact:
+
+```text
+build/app/outputs/bundle/release/app-release.aab
+```
+
+GitHub `main` is the source of truth. Do not commit signing secrets.
