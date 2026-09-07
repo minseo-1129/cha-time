@@ -1,7 +1,7 @@
 name: cha_time
 description: "cha-time — a quiet daily tea reflection ritual."
 publish_to: 'none'
-version: 1.0.0+4
+version: 1.0.0+5
 
 environment:
   sdk: ^3.13.2
