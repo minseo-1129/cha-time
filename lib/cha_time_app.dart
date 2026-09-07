@@ -29,6 +29,12 @@ Duration sendMomentDuration(ChaWeather weather) {
   }
 }
 
+double rainRippleTopForSip(int sipCount) {
+  const tops = <double>[48, 50, 52, 54, 56, 58];
+  final index = sipCount.clamp(0, 5).toInt();
+  return tops[index];
+}
+
 ChaSeason seasonForDate(DateTime date) {
   switch (date.month) {
     case 12:
@@ -1287,19 +1293,40 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                                 ),
                                 Transform.scale(
                                   scale: specialBowlScale(_special),
-                                  child: TeaBowlImage(
-                                    sipCount: _visualSips,
-                                    season: _season,
-                                  ),
-                                ),
-                                if (_reactionNonce > 0 &&
-                                    _weather == ChaWeather.rain)
-                                  Positioned(
-                                    top: 18,
-                                    child: SendRainRipple(
-                                      key: ValueKey('rain-$_reactionNonce'),
+                                  child: SizedBox(
+                                    width: 236,
+                                    height: 205,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        TeaBowlImage(
+                                          sipCount: _visualSips,
+                                          season: _season,
+                                        ),
+                                        if (_reactionNonce > 0 &&
+                                            _weather == ChaWeather.rain &&
+                                            _visualSips < kSipsPerCup)
+                                          AnimatedPositioned(
+                                            duration: const Duration(
+                                              milliseconds: 420,
+                                            ),
+                                            curve: Curves.easeOut,
+                                            top: rainRippleTopForSip(
+                                              _visualSips,
+                                            ),
+                                            left: 64,
+                                            right: 64,
+                                            child: SendRainRipple(
+                                              key: ValueKey(
+                                                'rain-$_reactionNonce',
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
+                                ),
                                 if (_reactionNonce > 0 &&
                                     _weather == ChaWeather.snow)
                                   Positioned(
@@ -1421,7 +1448,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
         color: const Color(0x57FFFFFF),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: TextField(
@@ -1430,6 +1457,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
               enabled: !_busy,
               minLines: 1,
               maxLines: 3,
+              textAlignVertical: TextAlignVertical.center,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _send(),
               cursorColor: const Color(0xFF81786F),
@@ -1445,7 +1473,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                   color: const Color(0xFFB8ADA3),
                 ),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                contentPadding: const EdgeInsets.only(top: 12, bottom: 18),
               ),
             ),
           ),

@@ -41,6 +41,16 @@ void main() {
     expect(sendMomentDuration(ChaWeather.snow), const Duration(milliseconds: 900));
   });
 
+  test('rain ripple follows each visible tea surface level', () {
+    expect(rainRippleTopForSip(0), 48);
+    expect(rainRippleTopForSip(1), 50);
+    expect(rainRippleTopForSip(2), 52);
+    expect(rainRippleTopForSip(3), 54);
+    expect(rainRippleTopForSip(4), 56);
+    expect(rainRippleTopForSip(5), 58);
+    expect(rainRippleTopForSip(99), 58);
+  });
+
   test('relationship stages follow the design thresholds', () {
     expect(relationshipStage(0), 1);
     expect(relationshipStage(6), 1);
