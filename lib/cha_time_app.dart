@@ -491,7 +491,7 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
             child: Image.asset(
               'design/tex/paper_soft.png',
               repeat: ImageRepeat.repeat,
-              opacity: .42,
+              opacity: const AlwaysStoppedAnimation(.42),
               fit: BoxFit.none,
             ),
           ),
@@ -661,9 +661,9 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFEAE2D6))),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          for (final day in ['M', 'T', 'W', 'T', 'F', 'S', 'S'])
+          for (final day in const ['M', 'T', 'W', 'T', 'F', 'S', 'S'])
             Expanded(
               child: Center(
                 child: Text(
@@ -1045,7 +1045,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
             child: Image.asset(
               'design/tex/paper_soft.png',
               repeat: ImageRepeat.repeat,
-              opacity: .42,
+              opacity: const AlwaysStoppedAnimation(.42),
               fit: BoxFit.none,
             ),
           ),
