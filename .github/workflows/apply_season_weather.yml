@@ -1,0 +1,38 @@
+name: apply-season-weather
+
+on:
+  push:
+    branches:
+      - implementation/season-matrix-specials
+    paths:
+      - .github/workflows/apply_season_weather.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: implementation/season-matrix-specials
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Apply source patch
+        run: python3 tooling/apply_season_weather_patch.py
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Test
+        run: flutter test
+      - name: Commit verified implementation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/cha_time_app.dart test/widget_test.dart pubspec.lock
+          git commit -m "Implement live weather and Season Matrix specials"
+          git push origin HEAD:implementation/season-matrix-specials
