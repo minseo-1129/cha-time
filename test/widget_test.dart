@@ -1,35 +1,40 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:doodle/main.dart';
+import 'package:cha_time/cha_time_app.dart';
 
 void main() {
-  test('Tea session record round-trips JSON', () {
-    const record = TeaSessionRecord(
-      dateStarted: '2026-08-31',
-      startedAt: '2026-08-31T20:00:00.000',
-      endedAt: null,
-      sipCount: 2,
-      cupsServed: 1,
-      finished: false,
-      phase: 'chatting',
-      systemText: '응, 듣고 있어.',
-      lastUserMessage: '오늘은 괜찮았어.',
+  test('DayRecord round-trips JSON', () {
+    const record = DayRecord(
+      date: '2026-09-07',
+      finished: true,
+      sips: 6,
+      cups: 1,
+      fortune: '오늘 한 말은 여기 두고 가.',
+      updatedAt: '2026-09-07T20:00:00.000',
     );
 
-    final restored =
-        TeaSessionRecord.fromJson(record.toJson());
+    final restored = DayRecord.fromJson(record.toJson());
 
-    expect(restored.dateStarted, record.dateStarted);
-    expect(restored.startedAt, record.startedAt);
-    expect(restored.endedAt, record.endedAt);
-    expect(restored.sipCount, record.sipCount);
-    expect(restored.cupsServed, record.cupsServed);
-    expect(restored.finished, record.finished);
-    expect(restored.phase, record.phase);
-    expect(restored.systemText, record.systemText);
-    expect(
-      restored.lastUserMessage,
-      record.lastUserMessage,
-    );
+    expect(restored.date, record.date);
+    expect(restored.finished, isTrue);
+    expect(restored.sips, 6);
+    expect(restored.cups, 1);
+    expect(restored.fortune, record.fortune);
+  });
+
+  test('relationship stages follow the design thresholds', () {
+    expect(relationshipStage(0), 1);
+    expect(relationshipStage(6), 1);
+    expect(relationshipStage(7), 2);
+    expect(relationshipStage(20), 2);
+    expect(relationshipStage(21), 3);
+  });
+
+  test('season mapping includes the rainy-season layer', () {
+    expect(seasonForDate(DateTime(2026, 1, 1)), ChaSeason.winter);
+    expect(seasonForDate(DateTime(2026, 4, 1)), ChaSeason.spring);
+    expect(seasonForDate(DateTime(2026, 6, 1)), ChaSeason.rainy);
+    expect(seasonForDate(DateTime(2026, 8, 1)), ChaSeason.summer);
+    expect(seasonForDate(DateTime(2026, 10, 1)), ChaSeason.autumn);
   });
 }
