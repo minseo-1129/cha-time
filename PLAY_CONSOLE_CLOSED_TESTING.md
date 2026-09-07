@@ -11,7 +11,9 @@
 
 1. Pull latest `main`.
 2. Read `docs/PROJECT_HANDOFF.md` for current release status.
-3. Confirm local upload signing files exist.
+3. Confirm local upload signing files exist:
+   - `C:\dev\keys\tea-upload-key.jks`
+   - `android/key.properties`
 4. Run:
    ```bash
    bash scripts/build_release.sh
@@ -71,6 +73,6 @@ Google Play will reject a later bundle that reuses an existing version code.
 
 Never commit:
 
-- `android/upload-keystore.jks`
+- `C:\dev\keys\tea-upload-key.jks`
 - `android/key.properties`
 - keystore passwords
