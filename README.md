@@ -50,13 +50,15 @@ The 장마 layer is data-driven rather than tied to fixed June/July dates. A sus
 
 When live weather is active, the app shows a small `Weather data by Open-Meteo` attribution link.
 
-For visual QA, weather can still be overridden without changing production logic:
+For visual QA, weather and season can be overridden without changing production logic:
 
 ```bash
-flutter run --dart-define=CHA_TIME_WEATHER=rain
+flutter run --dart-define=CHA_TIME_SEASON=spring --dart-define=CHA_TIME_WEATHER=rain
 ```
 
-Supported QA values: `clear`, `cloudy`, `rain`, `snow`.
+Supported weather QA values: `clear`, `cloudy`, `rain`, `snow`.
+Supported season QA values: `spring`, `summer`, `rainy`, `autumn` (or `fall`), `winter`.
+When `CHA_TIME_SEASON` is omitted, the app continues to use the real calendar season plus the Open-Meteo rainy-spell rule.
 
 ## Generative text status
 

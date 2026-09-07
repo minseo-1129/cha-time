@@ -39,6 +39,28 @@ ChaSeason seasonForContext(DateTime date, bool rainySpell) {
   return rainySpell ? ChaSeason.rainy : seasonForDate(date);
 }
 
+ChaSeason configuredSeason(DateTime date, bool rainySpell) {
+  const raw = String.fromEnvironment(
+    'CHA_TIME_SEASON',
+    defaultValue: '',
+  );
+  switch (raw.toLowerCase()) {
+    case 'spring':
+      return ChaSeason.spring;
+    case 'summer':
+      return ChaSeason.summer;
+    case 'rainy':
+      return ChaSeason.rainy;
+    case 'autumn':
+    case 'fall':
+      return ChaSeason.autumn;
+    case 'winter':
+      return ChaSeason.winter;
+    default:
+      return seasonForContext(date, rainySpell);
+  }
+}
+
 int relationshipStage(int visits) {
   if (visits <= 6) return 1;
   if (visits <= 20) return 2;
@@ -517,7 +539,7 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final season = seasonForContext(now, widget.liveWeather.rainySpell);
+    final season = configuredSeason(now, widget.liveWeather.rainySpell);
     final seasonStyle = SeasonStyle.of(season);
     final weather = weatherForContext(widget.liveWeather);
     final weatherStyle = WeatherStyle.of(weather);
@@ -900,7 +922,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
     _snapshot = widget.initialSnapshot;
     _stage = relationshipStage(_snapshot.visits);
     _voice = VoicePack.forStage(_stage);
-    _season = seasonForContext(DateTime.now(), widget.liveWeather.rainySpell);
+    _season = configuredSeason(DateTime.now(), widget.liveWeather.rainySpell);
     _weather = weatherForContext(widget.liveWeather);
     _special = seasonSpecialFor(
       SeasonStyle.of(_season).label,

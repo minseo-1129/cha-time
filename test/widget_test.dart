@@ -28,6 +28,12 @@ void main() {
     expect(restored.season, '가을');
   });
 
+  test('configured season falls back to calendar context without QA define', () {
+    expect(configuredSeason(DateTime(2026, 4, 1), false), ChaSeason.spring);
+    expect(configuredSeason(DateTime(2026, 7, 1), false), ChaSeason.summer);
+    expect(configuredSeason(DateTime(2026, 7, 1), true), ChaSeason.rainy);
+  });
+
   test('relationship stages follow the design thresholds', () {
     expect(relationshipStage(0), 1);
     expect(relationshipStage(6), 1);
