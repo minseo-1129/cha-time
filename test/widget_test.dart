@@ -13,6 +13,8 @@ void main() {
       cups: 1,
       fortune: '오늘 한 말은 여기 두고 가.',
       updatedAt: '2026-09-07T20:00:00.000',
+      weather: 'rain',
+      season: '가을',
     );
 
     final restored = DayRecord.fromJson(record.toJson());
@@ -22,6 +24,8 @@ void main() {
     expect(restored.sips, 6);
     expect(restored.cups, 1);
     expect(restored.fortune, record.fortune);
+    expect(restored.weather, 'rain');
+    expect(restored.season, '가을');
   });
 
   test('relationship stages follow the design thresholds', () {
@@ -35,8 +39,12 @@ void main() {
   test('season mapping includes the rainy-season layer', () {
     expect(seasonForDate(DateTime(2026, 1, 1)), ChaSeason.winter);
     expect(seasonForDate(DateTime(2026, 4, 1)), ChaSeason.spring);
-    expect(seasonForDate(DateTime(2026, 6, 1)), ChaSeason.rainy);
+    expect(seasonForDate(DateTime(2026, 6, 1)), ChaSeason.summer);
     expect(seasonForDate(DateTime(2026, 8, 1)), ChaSeason.summer);
+    expect(
+      seasonForContext(DateTime(2026, 6, 1), true),
+      ChaSeason.rainy,
+    );
     expect(seasonForDate(DateTime(2026, 10, 1)), ChaSeason.autumn);
   });
 

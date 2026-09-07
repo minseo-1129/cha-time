@@ -27,7 +27,6 @@ ChaSeason seasonForDate(DateTime date) {
       return ChaSeason.spring;
     case 6:
     case 7:
-      return ChaSeason.rainy;
     case 8:
       return ChaSeason.summer;
     default:
@@ -96,6 +95,7 @@ class DayRecord {
     required this.fortune,
     required this.updatedAt,
     this.weather = '',
+    this.season = '',
   });
 
   final String date;
@@ -105,6 +105,7 @@ class DayRecord {
   final String fortune;
   final String updatedAt;
   final String weather;
+  final String season;
 
   factory DayRecord.fromJson(Map<String, dynamic> json) {
     return DayRecord(
@@ -115,6 +116,7 @@ class DayRecord {
       fortune: json['fortune'] as String? ?? '',
       updatedAt: json['updatedAt'] as String? ?? '',
       weather: json['weather'] as String? ?? '',
+      season: json['season'] as String? ?? '',
     );
   }
 
@@ -126,6 +128,7 @@ class DayRecord {
         'fortune': fortune,
         'updatedAt': updatedAt,
         'weather': weather,
+        'season': season,
       };
 }
 
@@ -825,7 +828,9 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
         opacity: const AlwaysStoppedAnimation(.88),
       );
     }
-    final season = SeasonStyle.of(seasonForDate(date)).label;
+    final season = record.season.isNotEmpty
+        ? record.season
+        : SeasonStyle.of(seasonForDate(date)).label;
     final weather = WeatherStyle.of(_weatherFromName(record.weather)).label;
     final special = seasonSpecialFor(season, weather);
     return Opacity(
@@ -1067,6 +1072,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
       fortune: fortune.isNotEmpty ? fortune : previous?.fortune ?? '',
       updatedAt: DateTime.now().toIso8601String(),
       weather: _weather.name,
+      season: SeasonStyle.of(_season).label,
     );
     days[key] = record;
 
