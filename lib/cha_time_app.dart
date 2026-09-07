@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1681,21 +1682,29 @@ class _SteamState extends State<Steam> with SingleTickerProviderStateMixin {
 
   Widget _steamLine(double left, double height, double phase) {
     final t = (_controller.value + phase) % 1;
-    final opacity = sin(pi * t).clamp(0, 1).toDouble();
+    final opacity = t <= .30 ? t / .30 : (1 - t) / .70;
+    final rise = 10 - (40 * t);
+
     return Positioned(
       left: left,
-      bottom: 2 + 22 * t,
+      bottom: 2,
       child: Opacity(
-        opacity: opacity,
-        child: Container(
-          width: 4,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0x00FFFFFF), Color(0xB8999088)],
+        opacity: opacity.clamp(0, 1).toDouble(),
+        child: Transform.translate(
+          offset: Offset(0, rise),
+          child: ImageFiltered(
+            imageFilter: ui.ImageFilter.blur(sigmaX: 3.4, sigmaY: 3.4),
+            child: Container(
+              width: 4,
+              height: height,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00FFFFFF), Color(0xD9999088)],
+                ),
+              ),
             ),
           ),
         ),
