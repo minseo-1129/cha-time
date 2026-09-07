@@ -1,36 +1,33 @@
-# Tea typography
+# cha-time typography
 
-Preferred Tea voice typeface: **교보문고 손글씨 2025 이유빈**
+Preferred voice typeface: **교보문고 손글씨 2025 이유빈**.
 
 ## Current implementation
 
-Tea loads its voice font at runtime through `TeaFonts.loadVoice()` in `lib/main.dart`.
-
-The loader scans:
+`ChaTimeFonts.loadVoice()` scans:
 
 ```text
 assets/fonts/
 ```
 
-and prefers a 2025/Kyobo font file when available.
+and loads a local `.ttf`/`.otf`, preferring a 2025/Kyobo filename when available.
 
-Current voice-font usage includes:
+Voice-font usage includes:
 
-- system responses
-- opening prompt
+- opening and system responses
 - submitted user text
-- input text
-- input hint
-- empty-cup line: `잔이 비었어요`
-- closing line: `내일 또 들러줘.`
+- text input and hint
+- `잔이 비었어요`
+- refill/closing copy
 - action labels
+- fortune-card text and signature
 
-Calendar structural typography (month, weekdays, day numbers) intentionally remains a quiet sans-serif so handwriting reads as Tea's voice rather than navigation chrome.
+Calendar structure (month, weekdays, dates) intentionally remains a quiet sans-serif so the handwriting reads as cha-time's voice rather than navigation chrome.
 
-Do not switch the whole calendar to handwriting.
+## Release protection
+
+`scripts/build_release.sh` now stops before release if no `.ttf` or `.otf` exists in `assets/fonts/`. This prevents another AAB from silently falling back to the system font.
 
 ## Font-file caution
 
-Do not expose, redistribute, or commit a font file unless its license and exact source permit repository redistribution.
-
-See `docs/PROJECT_HANDOFF.md` for the current product/visual contract.
+Do not commit, expose, or redistribute the font binary unless its license and exact source explicitly permit repository redistribution. Keep a licensed local copy on the release machine and back it up separately.
