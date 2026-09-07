@@ -22,7 +22,9 @@ jobs:
         with:
           channel: stable
       - name: Apply source patch
-        run: python3 tooling/apply_season_weather_patch.py
+        run: |
+          sed -i "s/^once('backgroundColor: seasonStyle.paper,', 'backgroundColor: paper,', 'calendar paper override')$/s = s.replace('backgroundColor: seasonStyle.paper,', 'backgroundColor: paper,', 1)/" tooling/apply_season_weather_patch.py
+          python3 tooling/apply_season_weather_patch.py
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
