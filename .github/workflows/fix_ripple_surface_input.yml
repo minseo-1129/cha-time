@@ -1,0 +1,38 @@
+name: fix-ripple-surface-input
+
+on:
+  push:
+    branches:
+      - implementation/ripple-surface-input
+    paths:
+      - .github/workflows/fix_ripple_surface_input.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: implementation/ripple-surface-input
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Apply ripple/input patch
+        run: python3 tooling/fix_ripple_surface_input.py
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Test
+        run: flutter test
+      - name: Commit verified change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/cha_time_app.dart test/widget_test.dart
+          git commit -m "Track rain ripple with tea surface and center input text"
+          git push origin HEAD:implementation/ripple-surface-input
