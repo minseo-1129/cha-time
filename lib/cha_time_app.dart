@@ -1324,9 +1324,12 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                                             ),
                                             left: 64,
                                             right: 64,
-                                            child: SendRainRipple(
-                                              key: ValueKey(
-                                                'rain-$_reactionNonce',
+                                            child: Transform.scale(
+                                              scale: _visualSips == 5 ? .78 : 1,
+                                              child: SendRainRipple(
+                                                key: ValueKey(
+                                                  'rain-$_reactionNonce',
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -1493,7 +1496,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                   color: const Color(0xFFB8ADA3),
                 ),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.only(top: 12, bottom: 18),
+                contentPadding: const EdgeInsets.only(top: 14, bottom: 16),
               ),
             ),
           ),
@@ -2100,8 +2103,8 @@ class RipplePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.05
-      ..color = Color.fromRGBO(112, 139, 145, opacity.clamp(0, 1) * .62);
+      ..strokeWidth = .9
+      ..color = Color.fromRGBO(112, 139, 145, opacity.clamp(0, 1) * .38);
     final width = 8 + 58 * progress;
     final height = 2.5 + 14 * progress;
     canvas.drawOval(
