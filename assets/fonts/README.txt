@@ -1,22 +1,14 @@
-Tea voice font folder
+cha-time voice font folder
 
-Place the locally downloaded Kyobo Handwriting 2025 font file in this folder.
+Place the locally licensed Kyobo Handwriting 2025 font file in this folder before release builds.
 
 Recommended local path:
-assets/fonts/<your-downloaded-font>.ttf
+assets/fonts/KyoboHandwriting2025lyb.ttf
 
-The app discovers the first .ttf or .otf in this folder at startup and loads it
-as the Tea voice typeface. The exact filename does not need to be hard-coded.
+The app discovers a .ttf or .otf in this folder at startup and loads it as cha-time's voice typeface. The exact filename does not need to be hard-coded, though 2025/Kyobo filenames are preferred.
 
-The font is intentionally used only for Tea's authored voice:
-- system responses
-- "잔이 비었어요"
-- "내일 또 들러줘."
-- action labels
-- input hint
+The release script intentionally fails if this folder contains no real font binary, so a Play AAB cannot silently ship with the system-font fallback.
 
-Calendar month / weekdays / date numbers and the user's own message remain in
-the quiet sans-serif system typeface.
+The handwriting is used for cha-time's authored voice, reflection input/text, actions, closing copy, and fortune card. Calendar structural text remains sans-serif.
 
-Do not remove this README; it keeps the folder present in Git even when the
-font binary exists only locally.
+Do not commit or redistribute the font binary unless its license explicitly permits that.
