@@ -1,0 +1,19 @@
+name: implementation-check
+
+on:
+  push:
+    branches:
+      - implementation/cha-time-v4
+  workflow_dispatch:
+
+jobs:
+  flutter-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
