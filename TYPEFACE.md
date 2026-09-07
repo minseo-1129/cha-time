@@ -18,7 +18,7 @@ Voice-font usage includes:
 - submitted user text
 - text input and hint
 - `잔이 비었어요`
-- refill/closing copy
+- empty-cup/closing copy
 - action labels
 - fortune-card text and signature
 

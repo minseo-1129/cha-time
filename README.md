@@ -15,7 +15,7 @@ The Android application ID is already tied to the Play app and must not change. 
 
 The interactive product reference lives in `design/`:
 
-- `design/sodam-prototype.html` — calendar → tea session → refill/finish → fortune card
+- `design/sodam-prototype.html` — calendar → tea session → finish → fortune card (the shipping app intentionally limits each day to one cup)
 - `design/sodam-season-matrix.html` — season × weather visual and interaction rules
 - `design/README.md` — porting notes and design decisions
 
@@ -30,7 +30,7 @@ The current implementation is in:
 - `lib/weather_context.dart`
 - `lib/season_specials.dart`
 
-It includes calendar persistence, 6-sip cup progression, refill animation, closing/fortune flow, past finished-day fortune access, relationship progression, seasonal styling, live weather ambience, and migration from the previous `tea_sessions_v1` local storage format.
+It includes calendar persistence, a strict one-cup-per-day 6-sip progression, closing/fortune flow, past finished-day fortune access, relationship progression, seasonal styling, live weather ambience, and migration from the previous `tea_sessions_v1` local storage format.
 
 The six Season Matrix exceptions are implemented: 꽃비, 소나기, 갠 하늘, 찬비, 마른 햇빛, 첫눈.
 
