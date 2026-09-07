@@ -28,47 +28,6 @@ void main() {
     expect(restored.season, '가을');
   });
 
-  test('daily cup allows only one cup per day', () {
-    const partial = DayRecord(
-      date: '2026-09-07',
-      finished: false,
-      sips: 3,
-      cups: 1,
-      fortune: '',
-      updatedAt: '',
-    );
-    const empty = DayRecord(
-      date: '2026-09-07',
-      finished: false,
-      sips: 6,
-      cups: 1,
-      fortune: '',
-      updatedAt: '',
-    );
-    const legacyRefill = DayRecord(
-      date: '2026-09-07',
-      finished: false,
-      sips: 2,
-      cups: 2,
-      fortune: '',
-      updatedAt: '',
-    );
-    const finished = DayRecord(
-      date: '2026-09-07',
-      finished: true,
-      sips: 6,
-      cups: 1,
-      fortune: '오늘 한 말은 여기 두고 가.',
-      updatedAt: '',
-    );
-
-    expect(kCupsPerDay, 1);
-    expect(dailyCupEmpty(partial), isFalse);
-    expect(dailyCupEmpty(empty), isTrue);
-    expect(dailyCupEmpty(legacyRefill), isTrue);
-    expect(dailyCupFinished(finished), isTrue);
-  });
-
   test('relationship stages follow the design thresholds', () {
     expect(relationshipStage(0), 1);
     expect(relationshipStage(6), 1);

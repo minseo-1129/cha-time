@@ -10,7 +10,6 @@ import 'weather_context.dart';
 
 const String kChaTimeName = 'cha-time';
 const int kSipsPerCup = 6;
-const int kCupsPerDay = 1;
 
 enum ChaSeason { spring, summer, rainy, autumn, winter }
 enum ChaWeather { clear, cloudy, rain, snow }
@@ -38,13 +37,6 @@ ChaSeason seasonForDate(DateTime date) {
 ChaSeason seasonForContext(DateTime date, bool rainySpell) {
   return rainySpell ? ChaSeason.rainy : seasonForDate(date);
 }
-
-bool dailyCupFinished(DayRecord? record) => record?.finished == true;
-
-bool dailyCupEmpty(DayRecord? record) =>
-    record != null &&
-    !record.finished &&
-    (record.sips >= kSipsPerCup || record.cups > kCupsPerDay);
 
 int relationshipStage(int visits) {
   if (visits <= 6) return 1;
@@ -494,14 +486,6 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
   }
 
   Future<void> _openToday() async {
-    final today = _snapshot.days[dateKey(DateTime.now())];
-    if (dailyCupFinished(today)) {
-      if (today != null && today.fortune.isNotEmpty) {
-        await _openPast(today);
-      }
-      return;
-    }
-
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => ChaSessionScreen(
@@ -540,8 +524,6 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
     final paper = specialPaper(seasonStyle.paper, special);
     final stage = relationshipStage(_snapshot.visits);
     final voice = VoicePack.forStage(stage);
-    final todayRecord = _snapshot.days[dateKey(now)];
-    final todayFinished = dailyCupFinished(todayRecord);
 
     return Scaffold(
       backgroundColor: paper,
@@ -638,9 +620,7 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
                             shape: const StadiumBorder(),
                           ),
                           child: Text(
-                            todayFinished
-                                ? '오늘의 한 마디 보기'
-                                : '${voice.cta}  →',
+                            '${voice.cta}  →',
                             style: TextStyle(
                               fontFamily: ChaTimeFonts.voice,
                               fontSize: 15,
@@ -901,6 +881,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
 
   int _sips = 0;
   int _visualSips = 0;
+  int _cups = 1;
   int _typingGeneration = 0;
   int _reactionNonce = 0;
   String _teaLine = '';
@@ -926,21 +907,12 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
 
     final record = _snapshot.days[dateKey(DateTime.now())];
     if (record != null && !record.finished) {
-      if (dailyCupEmpty(record)) {
-        _sips = kSipsPerCup;
-        _visualSips = kSipsPerCup;
-        _phase = ChaSessionPhase.empty;
-        _teaLine = '잔이 비었어요';
-        _busy = false;
-      } else {
-        _sips = record.sips.clamp(0, kSipsPerCup).toInt();
-        _visualSips = _sips;
-      }
+      _sips = record.sips.clamp(0, kSipsPerCup).toInt();
+      _visualSips = _sips;
+      _cups = max(1, record.cups);
     }
 
-    if (_phase == ChaSessionPhase.session) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _open());
   }
 
   @override
@@ -1024,6 +996,39 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
     }
   }
 
+  Future<void> _refill() async {
+    final generation = ++_typingGeneration;
+    setState(() {
+      _busy = true;
+      _teaLine = '';
+      _userLine = '';
+      _visualSips = kSipsPerCup;
+    });
+
+    for (final step in const [(140, 4), (170, 2), (180, 0)]) {
+      await Future.delayed(Duration(milliseconds: step.$1));
+      if (!mounted || generation != _typingGeneration) return;
+      setState(() => _visualSips = step.$2);
+    }
+
+    setState(() {
+      _sips = 0;
+      _cups += 1;
+      _phase = ChaSessionPhase.session;
+    });
+    await _persist(finished: false);
+
+    await Future.delayed(const Duration(milliseconds: 280));
+    if (!mounted || generation != _typingGeneration) return;
+    await _type(
+      _stage == 3 ? '그래, 더 앉아 있어.' : '한 잔 더 우렸어.',
+      generation,
+    );
+    if (!mounted || generation != _typingGeneration) return;
+    setState(() => _busy = false);
+    _focusNode.requestFocus();
+  }
+
   Future<void> _finish() async {
     final generation = ++_typingGeneration;
     _focusNode.unfocus();
@@ -1063,7 +1068,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
       date: key,
       finished: finished,
       sips: _sips,
-      cups: kCupsPerDay,
+      cups: _cups,
       fortune: fortune.isNotEmpty ? fortune : previous?.fortune ?? '',
       updatedAt: DateTime.now().toIso8601String(),
       weather: _weather.name,
@@ -1332,10 +1337,15 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                     left: 0,
                     right: 0,
                     bottom: 56,
-                    child: Center(
-                      child: ChaActionButton(
-                        label: '달력으로',
-                        onPressed: () => Navigator.of(context).pop(),
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        '달력으로',
+                        style: TextStyle(
+                          fontSize: 13,
+                          letterSpacing: .6,
+                          color: Color(0xFFA69D93),
+                        ),
                       ),
                     ),
                   ),
@@ -1398,65 +1408,43 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
   }
 
   Widget _emptyActions() {
-    return Center(
-      child: ChaActionButton(
-        label: '오늘 이만 마칠래',
-        onPressed: _busy ? null : _finish,
-        filled: true,
-      ),
-    );
-  }
-}
-
-class ChaActionButton extends StatelessWidget {
-  const ChaActionButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-    this.filled = false,
-  });
-
-  final String label;
-  final VoidCallback? onPressed;
-  final bool filled;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = Text(
-      label,
-      style: TextStyle(
-        fontFamily: ChaTimeFonts.voice,
-        fontSize: 16,
-        height: 1.15,
-      ),
-    );
-
-    return SizedBox(
-      width: 224,
-      height: 52,
-      child: filled
-          ? FilledButton(
-              onPressed: onPressed,
-              style: FilledButton.styleFrom(
-                elevation: 0,
-                backgroundColor: const Color(0xFFE1E7CB),
-                foregroundColor: const Color(0xFF5C6349),
-                disabledBackgroundColor: const Color(0x80E1E7CB),
-                disabledForegroundColor: const Color(0x808E847B),
-                shape: const StadiumBorder(),
-              ),
-              child: text,
-            )
-          : OutlinedButton(
-              onPressed: onPressed,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF8E847B),
-                backgroundColor: const Color(0x33FFFFFF),
-                side: const BorderSide(color: Color(0xFFDCD3C6)),
-                shape: const StadiumBorder(),
-              ),
-              child: text,
+    return Column(
+      children: [
+        SizedBox(
+          width: 224,
+          child: FilledButton(
+            onPressed: _busy ? null : _refill,
+            style: FilledButton.styleFrom(
+              elevation: 0,
+              backgroundColor: const Color(0xFFE1E7CB),
+              foregroundColor: const Color(0xFF5C6349),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: const StadiumBorder(),
             ),
+            child: Text(
+              '한 잔 더 마실래',
+              style: TextStyle(fontFamily: ChaTimeFonts.voice, fontSize: 16),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: 224,
+          child: OutlinedButton(
+            onPressed: _busy ? null : _finish,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF8E847B),
+              side: const BorderSide(color: Color(0xFFDCD3C6)),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: const StadiumBorder(),
+            ),
+            child: Text(
+              '오늘 이만 마칠래',
+              style: TextStyle(fontFamily: ChaTimeFonts.voice, fontSize: 16),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -1575,13 +1563,12 @@ class FortuneScreen extends StatelessWidget {
                 const SizedBox(height: 26),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
+                  child: const Text(
                     '접어두기',
                     style: TextStyle(
-                      fontFamily: ChaTimeFonts.voice,
                       fontSize: 13,
                       letterSpacing: .6,
-                      color: const Color(0xFFF3EDE3),
+                      color: Color(0xFFF3EDE3),
                     ),
                   ),
                 ),
