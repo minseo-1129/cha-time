@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'season_specials.dart';
+import 'weather_context.dart';
+
 const String kChaTimeName = 'cha-time';
 const int kSipsPerCup = 6;
 
@@ -30,6 +33,10 @@ ChaSeason seasonForDate(DateTime date) {
     default:
       return ChaSeason.autumn;
   }
+}
+
+ChaSeason seasonForContext(DateTime date, bool rainySpell) {
+  return rainySpell ? ChaSeason.rainy : seasonForDate(date);
 }
 
 int relationshipStage(int visits) {
@@ -88,6 +95,7 @@ class DayRecord {
     required this.cups,
     required this.fortune,
     required this.updatedAt,
+    this.weather = '',
   });
 
   final String date;
@@ -96,6 +104,7 @@ class DayRecord {
   final int cups;
   final String fortune;
   final String updatedAt;
+  final String weather;
 
   factory DayRecord.fromJson(Map<String, dynamic> json) {
     return DayRecord(
@@ -105,6 +114,7 @@ class DayRecord {
       cups: (json['cups'] as num?)?.toInt() ?? 1,
       fortune: json['fortune'] as String? ?? '',
       updatedAt: json['updatedAt'] as String? ?? '',
+      weather: json['weather'] as String? ?? '',
     );
   }
 
@@ -115,6 +125,7 @@ class DayRecord {
         'cups': cups,
         'fortune': fortune,
         'updatedAt': updatedAt,
+        'weather': weather,
       };
 }
 
@@ -320,6 +331,25 @@ ChaWeather configuredWeather() {
     'CHA_TIME_WEATHER',
     defaultValue: 'clear',
   );
+  return _weatherFromName(raw);
+}
+
+ChaWeather weatherForContext(WeatherContextData data) {
+  const override = String.fromEnvironment('CHA_TIME_WEATHER', defaultValue: '');
+  if (override.isNotEmpty) return _weatherFromName(override);
+  switch (data.kind) {
+    case LiveWeatherKind.cloudy:
+      return ChaWeather.cloudy;
+    case LiveWeatherKind.rain:
+      return ChaWeather.rain;
+    case LiveWeatherKind.snow:
+      return ChaWeather.snow;
+    case LiveWeatherKind.clear:
+      return ChaWeather.clear;
+  }
+}
+
+ChaWeather _weatherFromName(String raw) {
   switch (raw.toLowerCase()) {
     case 'cloudy':
       return ChaWeather.cloudy;
@@ -414,13 +444,17 @@ class ChaTimeApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFFAF7F2),
       ),
-      home: const ChaCalendarScreen(),
+      home: WeatherContextBuilder(
+        builder: (context, weather) => ChaCalendarScreen(liveWeather: weather),
+      ),
     );
   }
 }
 
 class ChaCalendarScreen extends StatefulWidget {
-  const ChaCalendarScreen({super.key});
+  const ChaCalendarScreen({super.key, required this.liveWeather});
+
+  final WeatherContextData liveWeather;
 
   @override
   State<ChaCalendarScreen> createState() => _ChaCalendarScreenState();
@@ -451,7 +485,10 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
   Future<void> _openToday() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ChaSessionScreen(initialSnapshot: _snapshot),
+        builder: (_) => ChaSessionScreen(
+          initialSnapshot: _snapshot,
+          liveWeather: widget.liveWeather,
+        ),
       ),
     );
     await _load();
@@ -476,15 +513,17 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final season = seasonForDate(now);
+    final season = seasonForContext(now, widget.liveWeather.rainySpell);
     final seasonStyle = SeasonStyle.of(season);
-    final weather = configuredWeather();
+    final weather = weatherForContext(widget.liveWeather);
     final weatherStyle = WeatherStyle.of(weather);
+    final special = seasonSpecialFor(seasonStyle.label, weatherStyle.label);
+    final paper = specialPaper(seasonStyle.paper, special);
     final stage = relationshipStage(_snapshot.visits);
     final voice = VoicePack.forStage(stage);
 
     return Scaffold(
-      backgroundColor: seasonStyle.paper,
+      backgroundColor: paper,
       body: Stack(
         children: [
           Positioned.fill(
@@ -495,8 +534,16 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
               fit: BoxFit.none,
             ),
           ),
-          Positioned.fill(child: WeatherWash(weather: weather)),
-          AmbientParticles(weather: weather),
+          Positioned.fill(
+            child: SeasonWeatherWash(
+              weather: weatherStyle.label,
+              special: special,
+            ),
+          ),
+          SeasonAmbientParticles(
+            weather: weatherStyle.label,
+            special: special,
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(26, 24, 26, 24),
@@ -504,13 +551,19 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
                 children: [
                   _buildHeader(),
                   const SizedBox(height: 8),
-                  Text(
-                    '${seasonStyle.label} · ${weatherStyle.label}',
-                    style: TextStyle(
-                      fontFamily: ChaTimeFonts.voice,
-                      fontSize: 14,
-                      color: const Color(0xFFA69D93),
-                    ),
+                  Column(
+                    children: [
+                      Text(
+                        '${seasonStyle.label} · ${weatherStyle.label}',
+                        style: TextStyle(
+                          fontFamily: ChaTimeFonts.voice,
+                          fontSize: 14,
+                          color: const Color(0xFFA69D93),
+                        ),
+                      ),
+                      if (widget.liveWeather.fromLiveData)
+                        const WeatherAttribution(),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -529,16 +582,22 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
                                 child: Steam(
                                   opacity: min(
                                     .72,
-                                    seasonStyle.steam *
-                                        weatherStyle.steamMultiplier,
+                                    specialSteam(
+                                      seasonStyle.steam,
+                                      weatherStyle.steamMultiplier,
+                                      special,
+                                    ),
                                   ),
                                 ),
                               ),
                               SizedBox(
                                 width: 100,
-                                child: TeaBowlImage(
-                                  sipCount: 0,
-                                  season: season,
+                                child: Transform.scale(
+                                  scale: specialBowlScale(special),
+                                  child: TeaBowlImage(
+                                    sipCount: 0,
+                                    season: season,
+                                  ),
                                 ),
                               ),
                             ],
@@ -748,20 +807,30 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
                 ),
               ),
               const SizedBox(height: 3),
-              if (record != null)
-                Image.asset(
-                  record.finished
-                      ? 'assets/images/trace_blossom.png'
-                      : 'assets/images/status_raindrop.png',
-                  width: record.finished ? 19 : 13,
-                  height: record.finished ? 19 : 13,
-                  fit: BoxFit.contain,
-                  opacity: const AlwaysStoppedAnimation(.88),
-                ),
+              if (record != null) _recordMarker(record, date),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _recordMarker(DayRecord record, DateTime date) {
+    if (!record.finished) {
+      return Image.asset(
+        'assets/images/status_raindrop.png',
+        width: 13,
+        height: 13,
+        fit: BoxFit.contain,
+        opacity: const AlwaysStoppedAnimation(.88),
+      );
+    }
+    final season = SeasonStyle.of(seasonForDate(date)).label;
+    final weather = WeatherStyle.of(_weatherFromName(record.weather)).label;
+    final special = seasonSpecialFor(season, weather);
+    return Opacity(
+      opacity: .88,
+      child: SeasonClosingTrace(special: special, size: 19),
     );
   }
 
@@ -780,9 +849,14 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
 }
 
 class ChaSessionScreen extends StatefulWidget {
-  const ChaSessionScreen({super.key, required this.initialSnapshot});
+  const ChaSessionScreen({
+    super.key,
+    required this.initialSnapshot,
+    required this.liveWeather,
+  });
 
   final ChaSnapshot initialSnapshot;
+  final WeatherContextData liveWeather;
 
   @override
   State<ChaSessionScreen> createState() => _ChaSessionScreenState();
@@ -798,6 +872,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
   late VoicePack _voice;
   late ChaSeason _season;
   late ChaWeather _weather;
+  late SeasonSpecialKind _special;
 
   int _sips = 0;
   int _visualSips = 0;
@@ -818,8 +893,12 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
     _snapshot = widget.initialSnapshot;
     _stage = relationshipStage(_snapshot.visits);
     _voice = VoicePack.forStage(_stage);
-    _season = seasonForDate(DateTime.now());
-    _weather = configuredWeather();
+    _season = seasonForContext(DateTime.now(), widget.liveWeather.rainySpell);
+    _weather = weatherForContext(widget.liveWeather);
+    _special = seasonSpecialFor(
+      SeasonStyle.of(_season).label,
+      WeatherStyle.of(_weather).label,
+    );
 
     final record = _snapshot.days[dateKey(DateTime.now())];
     if (record != null && !record.finished) {
@@ -987,6 +1066,7 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
       cups: _cups,
       fortune: fortune.isNotEmpty ? fortune : previous?.fortune ?? '',
       updatedAt: DateTime.now().toIso8601String(),
+      weather: _weather.name,
     );
     days[key] = record;
 
@@ -1033,12 +1113,13 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
   Widget build(BuildContext context) {
     final seasonStyle = SeasonStyle.of(_season);
     final weatherStyle = WeatherStyle.of(_weather);
+    final paper = specialPaper(seasonStyle.paper, _special);
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final keyboardOpen = keyboardHeight > 0;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: seasonStyle.paper,
+      backgroundColor: paper,
       body: Stack(
         children: [
           Positioned.fill(
@@ -1049,8 +1130,17 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
               fit: BoxFit.none,
             ),
           ),
-          Positioned.fill(child: WeatherWash(weather: _weather)),
-          AmbientParticles(weather: _weather, reducedOpacity: keyboardOpen),
+          Positioned.fill(
+            child: SeasonWeatherWash(
+              weather: weatherStyle.label,
+              special: _special,
+            ),
+          ),
+          SeasonAmbientParticles(
+            weather: weatherStyle.label,
+            special: _special,
+            reducedOpacity: keyboardOpen,
+          ),
           if (_reactionNonce > 0)
             SendMomentOverlay(
               key: ValueKey(_reactionNonce),
@@ -1086,13 +1176,20 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                   left: 0,
                   right: 0,
                   child: Center(
-                    child: Text(
-                      '${seasonStyle.label} · ${weatherStyle.label}',
-                      style: TextStyle(
-                        fontFamily: ChaTimeFonts.voice,
-                        fontSize: 13,
-                        color: const Color(0xFFB0A69B),
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${seasonStyle.label} · ${weatherStyle.label}',
+                          style: TextStyle(
+                            fontFamily: ChaTimeFonts.voice,
+                            fontSize: 13,
+                            color: const Color(0xFFB0A69B),
+                          ),
+                        ),
+                        if (widget.liveWeather.fromLiveData)
+                          const WeatherAttribution(),
+                      ],
                     ),
                   ),
                 ),
@@ -1136,14 +1233,20 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                                         ? 0
                                         : min(
                                             .8,
-                                            seasonStyle.steam *
-                                                weatherStyle.steamMultiplier,
+                                            specialSteam(
+                                              seasonStyle.steam,
+                                              weatherStyle.steamMultiplier,
+                                              _special,
+                                            ),
                                           ),
                                   ),
                                 ),
-                                TeaBowlImage(
-                                  sipCount: _visualSips,
-                                  season: _season,
+                                Transform.scale(
+                                  scale: specialBowlScale(_special),
+                                  child: TeaBowlImage(
+                                    sipCount: _visualSips,
+                                    season: _season,
+                                  ),
                                 ),
                               ],
                             ),
@@ -1165,9 +1268,9 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                                   AnimatedOpacity(
                                     opacity: _showBlossom ? 1 : 0,
                                     duration: const Duration(milliseconds: 380),
-                                    child: Image.asset(
-                                      'assets/images/trace_blossom.png',
-                                      width: 30,
+                                    child: SeasonClosingTrace(
+                                      special: _special,
+                                      size: 30,
                                     ),
                                   ),
                                 ],

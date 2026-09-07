@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 enum LiveWeatherKind { clear, cloudy, rain, snow }
 
@@ -206,4 +206,36 @@ class _WeatherContextBuilderState extends State<WeatherContextBuilder> {
 
   @override
   Widget build(BuildContext context) => widget.builder(context, _data);
+}
+
+
+class WeatherAttribution extends StatelessWidget {
+  const WeatherAttribution({super.key});
+
+  static final Uri _source = Uri.parse('https://open-meteo.com/');
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      link: true,
+      label: 'Weather data by Open-Meteo.com',
+      child: InkWell(
+        onTap: () => launchUrl(_source),
+        borderRadius: BorderRadius.circular(4),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Text(
+            'Weather data by Open-Meteo',
+            style: TextStyle(
+              fontSize: 8.5,
+              letterSpacing: .15,
+              color: Color(0xFFBDB2A7),
+              decoration: TextDecoration.underline,
+              decorationColor: Color(0x66BDB2A7),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

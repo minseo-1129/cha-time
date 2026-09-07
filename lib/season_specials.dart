@@ -305,7 +305,7 @@ class SeasonParticlePainter extends CustomPainter {
     canvas.translate(center.dx, center.dy);
     canvas.rotate(sin(phase * pi) * .55);
     canvas.drawOval(
-      const Rect.fromCenter(center: Offset.zero, width: 5.5, height: 9),
+      Rect.fromCenter(center: Offset.zero, width: 5.5, height: 9),
       paint,
     );
     canvas.restore();
