@@ -220,7 +220,9 @@ class _SeasonAmbientParticlesState extends State<SeasonAmbientParticles>
     if (widget.weather != '비' && widget.weather != '눈') {
       return const SizedBox.shrink();
     }
-    final baseOpacity = widget.reducedOpacity ? .2 : .4;
+    final baseOpacity = widget.weather == '눈'
+        ? (widget.reducedOpacity ? .28 : .55)
+        : (widget.reducedOpacity ? .2 : .4);
     return IgnorePointer(
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 1500),
@@ -258,8 +260,8 @@ class SeasonParticlePainter extends CustomPainter {
     final count = switch (special) {
       SeasonSpecialKind.flowerRain => 8,
       SeasonSpecialKind.summerShower => 14,
-      SeasonSpecialKind.firstSnow => 7,
-      _ => snow ? 7 : 8,
+      SeasonSpecialKind.firstSnow => 15,
+      _ => snow ? 10 : 8,
     };
 
     for (var i = 0; i < count; i++) {
@@ -277,13 +279,17 @@ class SeasonParticlePainter extends CustomPainter {
 
       if (snow) {
         final sizeMultiplier = special == SeasonSpecialKind.firstSnow ? 1.5 : 1.0;
-        final radius = (2 + (i % 3)) * sizeMultiplier;
-        final paint = Paint()..color = const Color(0x99FFFFFF);
-        canvas.drawCircle(
-          Offset(x + 18 * sin((progress + i) * pi * 2), y),
-          radius,
-          paint,
+        final radius = (2.4 + (i % 3)) * sizeMultiplier;
+        final center = Offset(
+          x + 22 * sin((progress + i) * pi * 2),
+          y,
         );
+        final halo = Paint()
+          ..color = const Color(0x42FFFFFF)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.2);
+        final paint = Paint()..color = const Color(0xCCFFFFFF);
+        canvas.drawCircle(center, radius * 1.45, halo);
+        canvas.drawCircle(center, radius, paint);
       } else {
         final shower = special == SeasonSpecialKind.summerShower;
         final paint = Paint()
