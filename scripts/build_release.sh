@@ -26,10 +26,19 @@ fi
 
 if [[ ! -f "$KEYSTORE_PATH" ]]; then
   echo "Missing upload keystore: $STORE_FILE"
-  echo "For the standard local layout, use: C:/dev/keys/tea-upload-key.jks"
+  echo "Keep using the existing Play upload key. Standard local path: C:/dev/keys/tea-upload-key.jks"
   exit 1
 fi
 
+VOICE_FONT="$(find assets/fonts -maxdepth 1 -type f \( -iname '*.ttf' -o -iname '*.otf' \) -print -quit 2>/dev/null || true)"
+if [[ -z "$VOICE_FONT" ]]; then
+  echo "Missing cha-time voice font in assets/fonts/"
+  echo "Place your licensed local Kyobo Handwriting 2025 font there before a release build."
+  echo "The font binary stays local and must not be committed unless its license explicitly permits redistribution."
+  exit 1
+fi
+
+echo "==> Voice font: $VOICE_FONT"
 echo "==> Cleaning"
 flutter clean
 
@@ -38,6 +47,9 @@ flutter pub get
 
 echo "==> Static analysis"
 flutter analyze
+
+echo "==> Tests"
+flutter test
 
 echo "==> Building signed Android App Bundle"
 flutter build appbundle --release
