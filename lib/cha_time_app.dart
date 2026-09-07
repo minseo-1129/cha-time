@@ -930,13 +930,17 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
         _sips = kSipsPerCup;
         _visualSips = kSipsPerCup;
         _phase = ChaSessionPhase.empty;
+        _teaLine = '잔이 비었어요';
+        _busy = false;
       } else {
         _sips = record.sips.clamp(0, kSipsPerCup).toInt();
         _visualSips = _sips;
       }
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    if (_phase == ChaSessionPhase.session) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _open());
+    }
   }
 
   @override
