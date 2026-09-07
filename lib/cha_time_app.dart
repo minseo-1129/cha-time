@@ -16,6 +16,19 @@ enum ChaSeason { spring, summer, rainy, autumn, winter }
 enum ChaWeather { clear, cloudy, rain, snow }
 enum ChaSessionPhase { session, empty, closing }
 
+Duration sendMomentDuration(ChaWeather weather) {
+  switch (weather) {
+    case ChaWeather.clear:
+      return const Duration(milliseconds: 400);
+    case ChaWeather.cloudy:
+      return Duration.zero;
+    case ChaWeather.rain:
+      return const Duration(milliseconds: 700);
+    case ChaWeather.snow:
+      return const Duration(milliseconds: 900);
+  }
+}
+
 ChaSeason seasonForDate(DateTime date) {
   switch (date.month) {
     case 12:
@@ -1279,6 +1292,22 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                                     season: _season,
                                   ),
                                 ),
+                                if (_reactionNonce > 0 &&
+                                    _weather == ChaWeather.rain)
+                                  Positioned(
+                                    top: 18,
+                                    child: SendRainRipple(
+                                      key: ValueKey('rain-$_reactionNonce'),
+                                    ),
+                                  ),
+                                if (_reactionNonce > 0 &&
+                                    _weather == ChaWeather.snow)
+                                  Positioned(
+                                    bottom: 179,
+                                    child: SendSnowSteamPulse(
+                                      key: ValueKey('snow-$_reactionNonce'),
+                                    ),
+                                  ),
                               ],
                             ),
                           )
@@ -1892,6 +1921,62 @@ class SendMomentOverlay extends StatefulWidget {
 
 class _SendMomentOverlayState extends State<SendMomentOverlay>
     with SingleTickerProviderStateMixin {
+  AnimationController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.weather == ChaWeather.clear) {
+      _controller = AnimationController(
+        vsync: this,
+        duration: sendMomentDuration(widget.weather),
+      )..forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+    if (controller == null) return const SizedBox.shrink();
+
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) {
+          final eased = Curves.easeOut.transform(controller.value);
+          return Opacity(
+            opacity: (1 - eased) * .13,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(.45, -.35),
+                  radius: 1.05,
+                  colors: [Color(0xFFFFFFFF), Color(0x00FFFFFF)],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class SendRainRipple extends StatefulWidget {
+  const SendRainRipple({super.key});
+
+  @override
+  State<SendRainRipple> createState() => _SendRainRippleState();
+}
+
+class _SendRainRippleState extends State<SendRainRipple>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -1899,9 +1984,7 @@ class _SendMomentOverlayState extends State<SendMomentOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
-        milliseconds: widget.weather == ChaWeather.snow ? 900 : 700,
-      ),
+      duration: sendMomentDuration(ChaWeather.rain),
     )..forward();
   }
 
@@ -1913,32 +1996,16 @@ class _SendMomentOverlayState extends State<SendMomentOverlay>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.weather == ChaWeather.cloudy) return const SizedBox.shrink();
-
     return IgnorePointer(
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, _) {
-          final fade = sin(pi * _controller.value).clamp(0, 1).toDouble();
-          if (widget.weather == ChaWeather.rain) {
-            return Center(
-              child: CustomPaint(
-                size: const Size(180, 180),
-                painter: RipplePainter(
-                  progress: _controller.value,
-                  opacity: fade,
-                ),
-              ),
-            );
-          }
-          return Opacity(
-            opacity: fade * (widget.weather == ChaWeather.clear ? .13 : .08),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [Color(0xFFFFFFFF), Color(0x00FFFFFF)],
-                ),
-              ),
+          final progress = Curves.easeOut.transform(_controller.value);
+          return CustomPaint(
+            size: const Size(108, 34),
+            painter: RipplePainter(
+              progress: progress,
+              opacity: 1 - _controller.value,
             ),
           );
         },
@@ -1957,11 +2024,16 @@ class RipplePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..color = Color.fromRGBO(120, 145, 150, opacity * .55);
-    canvas.drawCircle(
-      size.center(Offset.zero),
-      12 + 58 * progress,
+      ..strokeWidth = 1.05
+      ..color = Color.fromRGBO(112, 139, 145, opacity.clamp(0, 1) * .62);
+    final width = 8 + 58 * progress;
+    final height = 2.5 + 14 * progress;
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: size.center(Offset.zero),
+        width: width,
+        height: height,
+      ),
       paint,
     );
   }
@@ -1969,6 +2041,93 @@ class RipplePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant RipplePainter oldDelegate) =>
       oldDelegate.progress != progress || oldDelegate.opacity != opacity;
+}
+
+class SendSnowSteamPulse extends StatefulWidget {
+  const SendSnowSteamPulse({super.key});
+
+  @override
+  State<SendSnowSteamPulse> createState() => _SendSnowSteamPulseState();
+}
+
+class _SendSnowSteamPulseState extends State<SendSnowSteamPulse>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: sendMomentDuration(ChaWeather.snow),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final t = Curves.easeInOut.transform(_controller.value);
+          final pulse = sin(pi * t);
+          return Opacity(
+            opacity: (.72 * pulse).clamp(0, 1),
+            child: Transform.translate(
+              offset: Offset(0, -24 * pulse),
+              child: Transform.scale(
+                alignment: Alignment.bottomCenter,
+                scale: 1 + .34 * pulse,
+                child: SizedBox(
+                  width: 78,
+                  height: 66,
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      _pulseLine(17, 33, .72),
+                      _pulseLine(37, 48, .88),
+                      _pulseLine(57, 29, .64),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _pulseLine(double left, double height, double alpha) {
+    return Positioned(
+      left: left,
+      bottom: 2,
+      child: ImageFiltered(
+        imageFilter: ui.ImageFilter.blur(sigmaX: 4.8, sigmaY: 5.2),
+        child: Container(
+          width: 5.5,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0x00FFFFFF),
+                Color.fromRGBO(205, 208, 207, alpha),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class PngButton extends StatefulWidget {

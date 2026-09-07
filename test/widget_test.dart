@@ -34,6 +34,13 @@ void main() {
     expect(configuredSeason(DateTime(2026, 7, 1), true), ChaSeason.rainy);
   });
 
+  test('send-moment weather timings follow the design spec', () {
+    expect(sendMomentDuration(ChaWeather.clear), const Duration(milliseconds: 400));
+    expect(sendMomentDuration(ChaWeather.cloudy), Duration.zero);
+    expect(sendMomentDuration(ChaWeather.rain), const Duration(milliseconds: 700));
+    expect(sendMomentDuration(ChaWeather.snow), const Duration(milliseconds: 900));
+  });
+
   test('relationship stages follow the design thresholds', () {
     expect(relationshipStage(0), 1);
     expect(relationshipStage(6), 1);
