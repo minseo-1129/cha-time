@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{{const n=new URLSearchParams(location.search).get("theme");if(n==="light"||n==="dark"){document.documentElement.dataset.theme=n}}{if(new URLSearchParams(location.search).get("_omthumb")==="1"){const n=(f)=>{const g=f.focus;if(!g)return;f.focus=function(h){g.call(this,{...h,preventScroll:true})}};n(HTMLElement.prototype);n(SVGElement.prototype);if(typeof MathMLElement!=="undefined"){n(MathMLElement.prototype)}const d=(f)=>{f.removeAttribute("autofocus");f.inert=true;if(!(f instanceof HTMLElement))f.removeAttribute("tabindex")};const p=(f)=>{if(f.hasAttribute("autofocus"))d(f);for(const g of f.querySelectorAll("[autofocus]")){d(g)}};p(document.documentElement);new MutationObserver((f)=>{for(const g of f){for(const h of g.addedNodes){if(h.nodeType===1)p(h)}}}).observe(document,{childList:true,subtree:true})}}{const n=()=>{try{if(document.querySelector('meta[name="color-scheme"]'))return;const d=getComputedStyle(document.documentElement).getPropertyValue("color-scheme").trim();if(d&&d!=="normal")return;const p=(y)=>{if(!y)return null;const m=getComputedStyle(y).backgroundColor.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);if(!m)return null;const w=m[4]==null?1:parseFloat(m[4])/(m[4].endsWith("%")?100:1);if(w<0.99)return null;return[+m[1],+m[2],+m[3]]};const f=p(document.body)||p(document.documentElement);if(!f)return;const g=(y)=>{const m=y/255;return m<=0.04045?m/12.92:((m+0.055)/1.055)**2.4};const h=0.2126*g(f[0])+0.7152*g(f[1])+0.0722*g(f[2]);document.documentElement.style.setProperty("color-scheme",h<0.4?"dark":"light")}catch{}};if(document.readyState==="complete")n();else window.addEventListener("load",n)}var I=["https://claude.ai","https://preview.claude.ai","https://c1662db3-8699-4f77-bcad-68e36e5cece5.claudeusercontent.com"];var B=true;var K=false;var C=()=>{};if(K===true){try{const n=setTimeout.bind(window);const d=1e4;const p=15;const f=1e4;const g=120000;const h=200;const y=(o)=>{try{let r;if(typeof o==="string")r=o;else if(o instanceof URL)r=o.href;else if(typeof Request!=="undefined"&&o instanceof Request)r=o.url;else return null;if(!r)return null;const l=document.baseURI;const i=new URL(r,l);if(i.protocol!=="http:"&&i.protocol!=="https:")return null;if(i.origin!==new URL(l).origin)return null;return i.origin+i.pathname}catch{return null}};const m=new Map;const w=(o)=>{let r=m.get(o);if(!r){if(m.size>=h){const l=m.keys().next().value;if(l!==undefined)m.delete(l)}r={fails:[],until:0,cooldown:f,hard:false};m.set(o,r)}return r};const R=(o)=>{const r=m.get(o);return r!==undefined&&r.until>Date.now()};const O=(o,r)=>{const l=Date.now();const i=w(o);if(r)i.hard=true;if(i.until>l)return;i.fails.push(l);while(i.fails.length>0&&i.fails[0]<=l-d)i.fails.shift();if(i.fails.length>=p){i.until=l+i.cooldown;if(i.hard)i.cooldown=Math.min(i.cooldown*2,g);i.fails.length=0;try{n(()=>{try{S(true)}catch{}},i.until-l+100)}catch{}console.warn("[omelette] asset circuit breaker: pausing requests to "+o+" for "+Math.round((i.until-l)/1000)+"s after "+p+" failures in "+d/1000+"s")}};const e=(o)=>{m.delete(o)};const t=100;const a=new WeakMap;const u=new Set;let s=null;const S=(o)=>{for(const r of Array.from(u)){try{const l=a.get(r);if(l===undefined){u.delete(r);continue}if(o){const i=y(l);if(i!==null&&R(i))continue}a.delete(r);u.delete(r);if(s!==null)s.call(r,l)}catch{}}};C=()=>{try{m.clear();S(false)}catch{}};document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")C()});const _=window.fetch;if(typeof _==="function"){const o=function(...r){let l=null;try{l=y(r[0])}catch{}if(l!==null&&R(l)){let c;try{if(r[1]&&r[1].signal!==undefined){c=r[1].signal||undefined}else if(typeof Request!=="undefined"&&r[0]instanceof Request){c=r[0].signal||undefined}}catch{c=undefined}return new Promise((k,b)=>{const E=()=>{try{return c.reason!==undefined?c.reason:new DOMException("The operation was aborted.","AbortError")}catch{return new DOMException("The operation was aborted.","AbortError")}};try{if(c&&c.aborted){b(E());return}}catch{}let T=false;const j=()=>{if(T)return;T=true;b(E())};try{if(c)c.addEventListener("abort",j,{once:true})}catch{}n(()=>{if(T)return;T=true;try{if(c)c.removeEventListener("abort",j)}catch{}let L;try{L=new Response(null,{status:429,statusText:"Too Many Requests",headers:{"Retry-After":"10"}})}catch{L={ok:false,status:429}}k(L)},250)})}const i=_.apply(window,r);if(l!==null){const c=l;i.then((k)=>{try{if(k.ok)e(c);else if(k.status===401||k.status===403||k.status===404||k.status===429){O(c,k.status!==404)}}catch{}},()=>{})}return i};window.fetch=o}const v=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");if(v!==undefined&&v.set!==undefined&&v.get!==undefined){const o=v.set;s=o;Object.defineProperty(HTMLImageElement.prototype,"src",{configurable:true,enumerable:v.enumerable,get:v.get,set(r){const l=`${r}`;try{const i=y(l);if(i!==null&&R(i)){a.set(this,l);if(u.size<t)u.add(this);return}}catch{}try{a.delete(this);u.delete(this)}catch{}o.call(this,l)}})}try{const o=HTMLImageElement.prototype.setAttribute;HTMLImageElement.prototype.setAttribute=function(r,l){if(arguments.length<2){o.apply(this,arguments);return}if(typeof r==="string"&&r.toLowerCase()==="src"){const i=`${l}`;try{const c=y(i);if(c!==null&&R(c)){a.set(this,i);if(u.size<t)u.add(this);return}a.delete(this);u.delete(this)}catch{}o.call(this,r,i);return}o.call(this,r,l)}}catch{}window.addEventListener("error",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)O(l,true)}}catch{}},true);window.addEventListener("load",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)e(l);const i=a.get(r);if(i!==undefined){let c=false;try{c=new URL(i,document.baseURI).href===new URL(r.currentSrc||r.src||"",document.baseURI).href}catch{c=false}if(c){a.delete(r);u.delete(r)}}}}catch{}},true)}catch{}}var J=30000;var G=3000;document.addEventListener("DOMContentLoaded",()=>{const n=window.Babel;const d="om-src-id";if(n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[d])){n.registerPlugin(d,({types:h})=>({visitor:{JSXOpeningElement(y,m){const w=y.node;if(w.name&&w.name.type==="JSXMemberExpression")return;for(let t=0;t<w.attributes.length;t++){const a=w.attributes[t];if(a.type==="JSXAttribute"&&a.name&&a.name.name==="data-om-id")return}const R=m.file&&m.file.opts&&m.file.opts.filename||"?";const O=w.loc&&w.loc.start;const e=`jsx:${R}:${w.start??0}:${O?O.line:0}:${O?O.column+1:0}`;w.attributes.push(h.jsxAttribute(h.jsxIdentifier("data-om-id"),h.stringLiteral(e)))}}}))}const p="om-text-extract";let f=false;if(B&&n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[p])){const h=window.React;if(h&&h.useSyncExternalStore&&h.createElement){f=true;const y={};const m=new Set;let w=0;window.__omTextO=y;window.__omTextSet=(e)=>{for(const t in e){const a=e[t];if(a==null)delete y[t];else y[t]=a}w++;m.forEach((t)=>t())};const R=(e)=>{m.add(e);return()=>m.delete(e)};const O=()=>w;window.__OmT=function e(t){h.useSyncExternalStore(R,O,O);return h.createElement("span",{"data-om-text":t.i,className:"__om-t"},t.i in y?y[t.i]:t.children)};n.registerPlugin(p,({types:e})=>{const t={style:1,script:1,noscript:1,textarea:1,title:1,option:1,text:1,tspan:1,textPath:1};const a={placeholder:1,alt:1,title:1,label:1,"aria-label":1,"aria-description":1,"aria-placeholder":1};const u=(o,r)=>e.logicalExpression("??",e.memberExpression(e.logicalExpression("||",e.memberExpression(e.identifier("window"),e.identifier("__omTextO")),e.objectExpression([])),e.stringLiteral(o),true),r);const s=(o)=>o.file&&o.file.opts&&o.file.opts.filename||"?";const S=(o)=>o.file&&o.file.code||"";const _=(o,r)=>{const l=(c)=>c&&c.start!=null&&c.end!=null&&(c.type==="StringLiteral"||c.type==="TemplateLiteral"&&c.expressions.length===0)?[c.start,c.end]:null;const i=l(r);if(i)return i;if(r&&r.type==="Identifier"){const c=o.scope.getBinding(r.name);if(c&&c.constant&&c.path.node.type==="VariableDeclarator"){return l(c.path.node.init)}}return null};const v=(o,r,l)=>{const i=o.node;let c=false;const k=(E,T)=>{c=true;return e.jsxElement(e.jsxOpeningElement(e.jsxIdentifier("__OmT"),[e.jsxAttribute(e.jsxIdentifier("i"),e.stringLiteral(E))],false),e.jsxClosingElement(e.jsxIdentifier("__OmT")),[T],false)};const b=i.children.map((E)=>{if(E.type==="JSXText"){if(E.start==null||E.end==null)return E;const T=l.slice(E.start,E.end);const j=T.length-T.trimStart().length;const L=T.length-T.trimEnd().length;if(j+L>=T.length)return E;return k(`txt:${r}:${E.start+j}:${E.end-L}`,E)}if(E.type==="JSXExpressionContainer"){const T=_(o,E.expression);if(T)return k(`str:${r}:${T[0]}:${T[1]}`,E)}return E});if(c)i.children=b};return{visitor:{JSXOpeningElement(o,r){const l=o.node;const i=s(r);const c={};for(let k=0;k<l.attributes.length;k++){const b=l.attributes[k];if(b.type!=="JSXAttribute"||!b.name)continue;const E=b.name.name;if(!a[E])continue;if(!b.value||b.value.type!=="StringLiteral")continue;if(b.value.start==null||b.value.end==null)continue;const T=`txt:${i}:${b.value.start}:${b.value.end}`;c[E]=T;b.value=e.jsxExpressionContainer(u(T,e.stringLiteral(b.value.value)))}if(Object.keys(c).length){l.attributes.push(e.jsxAttribute(e.jsxIdentifier("data-om-text-attrs"),e.stringLiteral(JSON.stringify(c))))}},JSXElement(o,r){const l=o.node.openingElement;const i=l&&l.name&&l.name.name;if(i==="__OmT")return;if(typeof i==="string"&&t[i])return;v(o,s(r),S(r))},JSXFragment(o,r){v(o,s(r),S(r))}}}})}}const g=f?["transform-react-jsx-source",d,p]:["transform-react-jsx-source",d];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((h,y)=>{const m=h.getAttribute("data-plugins")||"";const w=g.filter((R)=>m.indexOf(R)<0);if(w.length){h.setAttribute("data-plugins",m?`${m},${w.join(",")}`:w.join(","))}if(!h.hasAttribute("data-filename")){h.setAttribute("data-filename",h.getAttribute("src")||`inline-${y}`)}})});var A=window.parent;var U="not editable here — open the project in the Claude Design editor to save";var W=()=>Promise.resolve({persisted:false,noHost:true,reason:U});var H=W;var M="data/storage.json";var z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.match(/\/projects\/([^/]+)\/serve\//);if(d)return d[1];return n.hostname.split(".")[0]||""}catch{return location.hostname.split(".")[0]||""}};var Z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.indexOf("/serve/");if(d>=0)return n.origin+n.pathname.slice(0,d+"/serve/".length)+M}catch{}return"./"+M};var x=null;var N=()=>{if(!x){x=fetch(Z(),{cache:"no-store"}).then((n)=>{if(n.ok)return n.text();return n.status===404?"":null}).catch(()=>null).then((n)=>{if(n===null){x=null;return null}const d=new Map;if(!n)return d;let p;try{p=JSON.parse(n)}catch{console.warn("[omelette.storage] "+M+" is not valid JSON; treating the store as unreadable so a save cannot overwrite the "+"hand-edited bytes. Fix the JSON (or delete the file) to re-enable persistence.");x=null;return null}if(p===null||typeof p!=="object"||Array.isArray(p)){console.warn("[omelette.storage] "+M+" doesn't hold a JSON object; treating the store as unreadable so a save cannot "+"overwrite the hand-edited bytes. Make the top level a JSON object to re-enable persistence.");x=null;return null}const f=p;if("data"in f){const g=f.data;if(g===null||typeof g!=="object"||Array.isArray(g)){console.warn("[omelette.storage] "+M+' has a "data" field that is not a JSON object; treating the store as unreadable so a '+'save cannot overwrite the hand-edited bytes. Make "data" a JSON object to re-enable persistence.');x=null;return null}const h=f._meta;const y=h!==null&&typeof h==="object"?h.project:undefined;if(typeof y==="string"&&y!==""&&y!==z())return d;for(const m of Object.keys(g))d.set(m,g[m]);return d}for(const g of Object.keys(f)){if(g!=="_meta")d.set(g,f[g])}return d})}return x};var F=(n)=>H(M,JSON.stringify({_meta:{project:z(),version:1},data:Object.fromEntries(n)},null,2));var D=Promise.resolve();var $=(n)=>{const d=D.then(n);D=d.then(()=>{return},()=>{return});return d};var V=/sk-(?:ant-)?[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|xox[a-z]-[A-Za-z0-9][A-Za-z0-9-]{9,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;var Y=/password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|credential/i;var Q=(n,d,p)=>{if(V.test(d)||Y.test(n)&&typeof p==="string"&&p.length>=8){console.warn('[omelette.storage] the value for "'+n+'" looks like a credential. The storage file is a plaintext project file — visible to '+"everyone with project access and copied when the project is duplicated. Do not store secrets here.")}};var q={persisted:false,reason:"could not load the existing store — not overwriting it"};var X={persisted:false,reason:"stored value changed since a failed read — re-read this key before saving"};var P=new Set;var ee={get:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.get: key must be a string"))}return $(N).then((d)=>{if(d===null){P.add(n);return null}P.delete(n);if(!d.has(n))return null;const p=d.get(n);return p==null?null:JSON.parse(JSON.stringify(p))})},set:(n,d)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.set: key must be a string"))}let p;try{p=JSON.stringify(d)}catch(g){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable ("+String(g)+")"))}if(p===undefined){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable"))}Q(n,p,d);const f=JSON.parse(p);return $(()=>N().then((g)=>{if(g===null)return q;if(P.has(n)){if(g.has(n))return X;P.delete(n)}g.set(n,f);return F(g)}))},delete:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.delete: key must be a string"))}return $(()=>N().then((d)=>{if(d===null)return q;if(P.has(n)){if(d.has(n))return X;P.delete(n)}d.delete(n);return F(d)}))},keys:()=>$(N).then((n)=>n===null?[]:Array.from(n.keys()))};window.omelette={writeFile:(n,d)=>H(n,d).then((p)=>{if(!p.persisted&&!p.noHost){throw new Error(p.reason||"write failed")}}),storage:ee};if(A&&A!==window){const n=(e,t)=>{try{A.postMessage({__omelette_log:true,type:e,data:t},"*")}catch{}};["log","warn","error"].forEach((e)=>{const t=console[e];console[e]=(...a)=>{const u=a.map((s)=>{try{return typeof s==="object"?JSON.stringify(s):String(s)}catch{try{return String(s)}catch{return"[unstringifiable]"}}}).join(" ");n(e,u);t.apply(console,a)}});window.addEventListener("error",(e)=>{const t=e.target;if(t&&t!==window&&t.tagName){const a=t.src||t.href||"";n("resource_error",`${t.tagName} failed to load: ${a}`)}else{n("error",`${e.message||"Unknown error"} at ${e.filename||"?"}:${e.lineno||0}:${e.colno||0}`)}},true);window.addEventListener("unhandledrejection",(e)=>{const t=e.reason;const a=t instanceof Error?`${t.message} ${t.stack}`:String(t);n("error",`Unhandled rejection: ${a}`)});window.addEventListener("click",(e)=>{if(e.defaultPrevented||e.button!==0)return;if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const t=e.composedPath?e.composedPath():[];const a=["button","input","select","textarea","summary","label"];let u=null;for(const v of t){if(!(v instanceof Element))continue;if(v.localName==="a"){if(!(v instanceof HTMLAnchorElement))return;u=v;break}if(a.indexOf(v.localName)!==-1)return}if(!u)return;if(u.isContentEditable)return;const s=u.closest("[contenteditable]");if(s&&s.getAttribute("contenteditable")!=="false")return;const S=(u.getAttribute("target")||"_self").toLowerCase();if(S!=="_self"&&S!=="_top"&&S!=="_parent")return;let _;try{_=new URL(u.href)}catch{return}if(_.protocol!=="http:"&&_.protocol!=="https:")return;if(location.origin==="null")return;if(_.origin===location.origin)return;e.preventDefault();window.open(_.href,"_blank","noopener,noreferrer")});const d=()=>{try{A.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(window.ResizeObserver)new ResizeObserver(d).observe(document.documentElement);const p=()=>{d();if(!document.querySelector('script[type="text/babel"],script[type="text/jsx"]'))return;const e=()=>document.getElementById("root")||document.querySelector("body > div[id]");const t=e()?.firstElementChild??null;let a=0;const u=()=>{const s=e();if(s&&s.firstElementChild!==t||++a>30){d();return}setTimeout(u,100)};setTimeout(u,100)};if(document.readyState==="complete")p();else window.addEventListener("load",p);const f={};let g=0;const h=(e)=>new Promise((t,a)=>{if(!I.length){a(new Error("claude.complete: no parent origin"));return}const u=`c${++g}`;const s=()=>setTimeout(()=>{delete f[u];a(new Error(`claude.complete: no data for ${J/1000}s`))},J);const S=s();f[u]={resolve:t,reject:a,text:"",t:S,arm:s};try{for(const _ of I){A.postMessage({__om_api:true,id:u,body:e},_)}}catch(_){clearTimeout(S);delete f[u];a(_)}});const y=8;const m=async(e,t)=>{if(!Array.isArray(e.messages)){throw new Error("claude.complete: tools require a messages array")}const a=e.messages.slice();const u={...e,tools:e.tools.map((_)=>{if(_===null||typeof _!=="object")return _;const v={};for(const o of Object.keys(_)){if(typeof _[o]!=="function")v[o]=_[o]}return v})};const s=u.tool_choice;const S=s!=null&&(s.type==="any"||s.type==="tool")?{...u,tool_choice:s.disable_parallel_tool_use!==undefined?{type:"auto",disable_parallel_tool_use:s.disable_parallel_tool_use}:{type:"auto"}}:u;for(let _=0;_<y;_++){const v=await h({..._===0?u:S,messages:a});const o=v.message;const r=o&&Array.isArray(o.content)?o.content:null;const l=r?r.filter((c)=>c?.type==="tool_use"):[];if(o?.stop_reason!=="tool_use"||l.length===0){return v.text}const i=[];for(const c of l){const k=t.get(c.name);if(!k){i.push({type:"tool_result",tool_use_id:c.id,content:`no handler for tool "${c.name}"`,is_error:true});continue}try{const b=await k(c.input);const E=typeof b==="string"?b:O(b)??"";i.push({type:"tool_result",tool_use_id:c.id,content:E})}catch(b){i.push({type:"tool_result",tool_use_id:c.id,content:String(b?.message??b??"tool handler failed"),is_error:true})}}a.push({role:"assistant",content:r},{role:"user",content:i})}throw new Error(`claude.complete: exceeded ${y} tool turns`)};window.claude={complete(e){const t=e;if(t!==null&&typeof t==="object"&&Array.isArray(t.tools)&&t.tools.some((a)=>a!==null&&typeof a==="object"&&typeof a.run==="function")){const a=new Map;for(const u of t.tools){if(u!==null&&typeof u==="object"&&typeof u.run==="function"){a.set(String(u.name),u.run)}}return m(t,a)}return h(e).then((a)=>a.text)}};const w={};let R=0;H=(e,t)=>new Promise((a)=>{if(!I.length){a({persisted:false,noHost:true,reason:U});return}const u=`f${++R}`;const s=setTimeout(()=>{delete w[u];a({persisted:false,noHost:true,reason:U})},G);w[u]={settle:a,t:s};try{for(const S of I){A.postMessage({__om_file:true,id:u,op:"write",path:e,content:t},S)}}catch{clearTimeout(s);delete w[u];a({persisted:false,noHost:true,reason:U})}});const O=(e)=>{try{return JSON.stringify(e)}catch{return JSON.stringify(String(e))}};window.addEventListener("message",(e)=>{if(I.indexOf(e.origin)<0)return;if(e.source!==A)return;const t=e.data;if(!t)return;if(t.type==="omelette-preview-refresh"){if(typeof t.token!=="string"||!/^[0-9a-f.-]+(\.(rc|pr-[0-9]+))?(\.[0-9]+\.[0-9a-f]{16})?$/.test(t.token))return;const s=Math.max(1,Math.floor((t.expiresAt||0)-Date.now()/1000));document.cookie="__Host-omelette-preview="+t.token+"; Path=/; Secure; SameSite=None; Partitioned; Max-Age="+s;C();return}if(t.__om_file_r){const s=w[t.id];if(!s)return;clearTimeout(s.t);delete w[t.id];s.settle(t.ok?{persisted:true}:{persisted:false,reason:t.error||"write failed"});return}if(t.__om_api_r){const s=f[t.id];if(!s)return;if(t.error!=null){clearTimeout(s.t);delete f[t.id];s.reject(new Error(t.error));return}if(t.chunk!=null){clearTimeout(s.t);s.t=s.arm();s.text+=t.chunk;return}if(t.done){clearTimeout(s.t);delete f[t.id];s.resolve({text:t.text!=null?t.text:s.text,message:t.message});return}return}if(!t.__om_eval)return;const a=t;const u=(s)=>{e.source.postMessage({...s,__om_eval_r:1,id:a.id},e.origin)};try{const s=(0,eval)(a.code);if(s&&typeof s.then==="function"){s.then((S)=>u({ok:1,v:O(S)}),(S)=>u({ok:0,e:String(S)}))}else{u({ok:1,v:O(s)})}}catch(s){u({ok:0,e:String(s)})}})}})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<meta name="design_doc_mode" content="canvas">
+<title>소담 — 계절 × 날씨 규칙</title>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#F1EDE4"/><g fill="none" stroke="#8E8577" stroke-width="3"><rect x="46" y="46" width="108" height="108" rx="4"/><path d="M82 46v108M118 46v108M46 82h108M46 118h108"/></g><circle cx="64" cy="64" r="8" fill="#BEC99B"/><circle cx="136" cy="136" r="8" fill="#D8C39A"/></svg></template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Sodam Voice';src:url('../assets/fonts/KyoboHandwriting2025lyb.ttf') format('truetype');font-display:swap;}
+html,body{margin:0;padding:0;background:#EFEAE1;}
+*{box-sizing:border-box;}
+a{color:#6E7A52;text-decoration:none;}
+a:hover{color:#514B45;}
+</style>
+</helmet>
+
+<div style="width:1720px;padding:64px 72px 88px;background:#FAF7F1;background-image:url('./tex/paper_soft.png');background-size:260px 260px;font-family:'Noto Sans KR',system-ui,sans-serif;color:#4E4740;">
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding-bottom:22px;border-bottom:1px solid #E3DACD;">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:44px;line-height:1.1;letter-spacing:-.3px;">Sodam — Season × Weather</div>
+      <div style="margin-top:10px;font-size:14px;letter-spacing:2.4px;color:#A69D93;">그날의 맥락이 화면과 상호작용에 남는 방식</div>
+    </div>
+    <div style="max-width:420px;font-size:13px;line-height:1.85;color:#8A8078;">20개 조합을 각각 디자인하지 않습니다. 여섯 개의 레이어가 각자 <strong style="font-weight:500;color:#5E564E;">한 가지만</strong> 소유하고, 계절과 날씨가 그 레이어를 따로 건드립니다. 어긋나는 조합만 예외로 적습니다.</div>
+  </div>
+
+  <div style="margin-top:52px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:3.4px;color:#B0A69B;">01 — LAYER OWNERSHIP</div>
+  <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;">
+    <sc-for list="{{ layers }}" as="l" hint-placeholder-count="6">
+      <div style="padding:24px 26px 26px;background:rgba(255,255,255,.62);border:1px solid #E8E0D4;border-radius:5px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:22px;height:22px;border-radius:50%;background:#F0EEE4;border:1px solid #DDD5C6;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9A9188;">{{ l.n }}</div>
+          <div style="font-size:15px;font-weight:500;">{{ l.name }}</div>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:9px;">
+          <div style="display:flex;gap:10px;font-size:12.5px;line-height:1.7;"><span style="flex:0 0 62px;color:#B0A69B;letter-spacing:.6px;">계절</span><span style="flex:1;color:{{ l.sc }}">{{ l.season }}</span></div>
+          <div style="display:flex;gap:10px;font-size:12.5px;line-height:1.7;"><span style="flex:0 0 62px;color:#B0A69B;letter-spacing:.6px;">날씨</span><span style="flex:1;color:{{ l.wc }}">{{ l.weather }}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="margin-top:14px;font-size:12.5px;line-height:1.8;color:#9A9188;">계절은 <strong style="font-weight:500;color:#6E7A52;">무엇이 있는가</strong>(종이·차·흔적)를, 날씨는 <strong style="font-weight:500;color:#6E7A52;">그것이 어떻게 보이는가</strong>(빛·입자·속도)를 소유합니다. 두 축이 같은 속성을 다투지 않으니 조합이 늘어도 규칙은 그대로입니다.</div>
+
+  <div style="margin-top:60px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:3.4px;color:#B0A69B;">02 — 5 × 4 MATRIX</div>
+  <div style="margin-top:20px;display:grid;grid-template-columns:132px repeat(4,minmax(0,1fr));gap:12px;">
+
+    <div></div>
+    <sc-for list="{{ weathers }}" as="w" hint-placeholder-count="4">
+      <div style="padding:0 4px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #E3DACD;">
+        <div style="font-size:16px;font-weight:500;">{{ w.name }}</div>
+        <div style="font-size:11.5px;color:#B0A69B;">{{ w.own }}</div>
+      </div>
+    </sc-for>
+
+    <sc-for list="{{ matrix }}" as="row" hint-placeholder-count="5">
+      <div style="padding-top:18px;">
+        <div style="font-family:'Playfair Display',serif;font-size:26px;line-height:1.2;">{{ row.name }}</div>
+        <div style="margin-top:8px;font-size:11.5px;line-height:1.7;color:#A69D93;">{{ row.note }}</div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:7px;">
+          <div style="width:15px;height:15px;border-radius:50%;background:#B8C09A;filter:{{ row.tea }}"></div>
+          <div style="font-size:11px;color:#B0A69B;">{{ row.teaName }}</div>
+        </div>
+      </div>
+      <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="4">
+        <div style="position:relative;padding:16px;border:1px solid #E8E0D4;border-radius:5px;background:{{ c.paper }}">
+          <div style="position:absolute;inset:0;border-radius:5px;pointer-events:none;background:{{ c.wash }}"></div>
+          <sc-if value="{{ c.blocked }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;border-radius:5px;background:repeating-linear-gradient(135deg,rgba(150,140,128,.09) 0 6px,rgba(150,140,128,0) 6px 12px);"></div>
+          </sc-if>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div style="width:26px;height:26px;border-radius:50%;background:#B8C09A;filter:{{ c.tea }}"></div>
+              <div style="width:3px;height:22px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(150,140,128,.9));filter:blur(1.4px);opacity:{{ c.steam }}"></div>
+            </div>
+            <div style="font-size:10px;letter-spacing:1.4px;color:#A69D93;">{{ c.particle }}</div>
+          </div>
+          <div style="position:relative;min-height:52px;margin-top:16px;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:17px;line-height:1.5;color:#5B534B;text-wrap:pretty;">{{ c.line }}</div>
+          <div style="position:relative;display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <sc-if value="{{ c.special }}" hint-placeholder-val="{{ false }}">
+              <img src="../assets/images/trace_blossom.png" style="width:12px;height:12px;object-fit:contain;">
+            </sc-if>
+            <div style="font-size:11px;color:#9A9188;">{{ c.tag }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </sc-for>
+  </div>
+  <div style="margin-top:14px;display:flex;gap:26px;font-size:11.5px;color:#A69D93;">
+    <div style="display:flex;align-items:center;gap:7px;"><img src="../assets/images/trace_blossom.png" style="width:12px;height:12px;"><span>예외 조합 — 규칙을 덮어씀</span></div>
+    <div style="display:flex;align-items:center;gap:7px;"><span style="width:18px;height:11px;border-radius:2px;background:repeating-linear-gradient(135deg,rgba(150,140,128,.22) 0 4px,rgba(150,140,128,0) 4px 8px);"></span><span>발생하지 않는 조합 — 계절 판정에서 제외</span></div>
+    <div>세로 막대 = 김(steam) 세기 · 원 = 그날의 차 색</div>
+  </div>
+
+  <div style="margin-top:60px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:3.4px;color:#B0A69B;">03 — 예외 조합 6</div>
+  <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;">
+    <sc-for list="{{ specials }}" as="s" hint-placeholder-count="6">
+      <div style="padding:24px 26px 26px;border:1px solid #E8E0D4;border-radius:5px;background:{{ s.paper }}">
+        <div style="display:flex;align-items:baseline;gap:10px;">
+          <div style="font-size:12px;letter-spacing:1.6px;color:#A69D93;">{{ s.combo }}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;">{{ s.title }}</div>
+        </div>
+        <div style="margin-top:14px;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:19px;color:#5B534B;">{{ s.line }}</div>
+        <div style="height:1px;margin:18px 0 16px;background:#E4DCCF;"></div>
+        <div style="font-size:12.5px;line-height:1.85;color:#7E756C;">{{ s.rule }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:60px;font-family:'Playfair Display',serif;font-size:13px;letter-spacing:3.4px;color:#B0A69B;">04 — 보낸 직후, 그날의 반응</div>
+  <div style="margin-top:8px;max-width:900px;font-size:13px;line-height:1.85;color:#8A8078;">배경만 계절을 입으면 벽지에 그칩니다. 한 마디를 보낸 <strong style="font-weight:500;color:#5E564E;">그 0.4초</strong>에도 날씨가 한 번 응답해야 맥락이 기능으로 읽힙니다.</div>
+  <div style="margin-top:20px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;">
+    <sc-for list="{{ moments }}" as="m" hint-placeholder-count="4">
+      <div style="padding:24px 26px 26px;background:rgba(255,255,255,.6);border:1px solid #E8E0D4;border-radius:5px;">
+        <div style="font-size:15px;font-weight:500;">{{ m.name }}</div>
+        <div style="margin-top:14px;font-size:12.5px;line-height:1.85;color:#7E756C;">{{ m.what }}</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:7px;font-size:11.5px;color:#A69D93;">
+          <div>지속 {{ m.dur }}</div>
+          <div>커브 {{ m.curve }}</div>
+          <div>타이핑 배속 {{ m.typing }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:60px;padding:34px 38px 38px;border:1px solid #DED5C7;border-radius:6px;background:rgba(255,255,255,.5);">
+    <div style="font-family:'Playfair Display',serif;font-size:13px;letter-spacing:3.4px;color:#B0A69B;">05 — 아직 안 정한 것</div>
+    <div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;">
+      <sc-for list="{{ opens }}" as="o" hint-placeholder-count="3">
+        <div>
+          <div style="font-size:15px;font-weight:500;line-height:1.55;">{{ o.q }}</div>
+          <div style="margin-top:12px;font-size:12.5px;line-height:1.85;color:#7E756C;">{{ o.a }}</div>
+          <div style="margin-top:12px;font-size:12px;line-height:1.8;color:#6E7A52;">{{ o.lean }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1720}}">
+class Component extends DCLogic {
+  static SEASON = {
+    '봄':   {paper:'#FAF7F2', tea:'none',                                                     steam:.24, teaName:'연녹 · 첫물', note:'벚꽃 흔적 · 얇고 밝은 종이'},
+    '여름': {paper:'#F7F9F3', tea:'saturate(1.18) hue-rotate(6deg)',                          steam:.08, teaName:'진녹 · 냉차',  note:'잎 흔적 · 초록 기운의 종이'},
+    '장마': {paper:'#F1F3F1', tea:'saturate(.86) brightness(.99)',                            steam:.18, teaName:'흐린 녹 · 미지근', note:'물방울 흔적 · 습기 먹은 종이'},
+    '가을': {paper:'#FAF4E9', tea:'sepia(.3) hue-rotate(-6deg) saturate(1.2)',                steam:.36, teaName:'호박 · 보리',  note:'낙엽 흔적 · 누른 종이'},
+    '겨울': {paper:'#F5F5F4', tea:'sepia(.46) hue-rotate(-4deg) saturate(1.2) brightness(.97)', steam:.52, teaName:'대추 · 현미', note:'마른 가지 흔적 · 찬 종이'}
+  };
+  static WEATHER = {
+    '맑음': {own:'빛 · 우상단 · 따뜻', wash:'radial-gradient(120% 78% at 74% 6%, rgba(255,244,214,.5), rgba(255,244,214,0) 58%)', p:'입자 없음', steamX:1,    typing:'×1.00'},
+    '흐림': {own:'빛 · 상단 · 평면',   wash:'linear-gradient(180deg, rgba(206,209,206,.3), rgba(206,209,206,0) 48%)',            p:'입자 없음', steamX:1.1,  typing:'×1.05'},
+    '비':   {own:'빛 · 낮게 · 청회',   wash:'linear-gradient(180deg, rgba(178,190,193,.4), rgba(178,190,193,.05) 58%)',          p:'빗방울 8',  steamX:1.25, typing:'×1.15'},
+    '눈':   {own:'빛 · 확산 · 백',     wash:'radial-gradient(120% 68% at 50% 0%, rgba(255,255,255,.66), rgba(236,241,246,.08) 62%)', p:'눈 7',  steamX:1.4,  typing:'×1.20'}
+  };
+
+  // 계절 × 날씨 → 첫마디. 예외 조합은 special/tag로 표시.
+  static LINES = {
+    '봄':   {'맑음':['오늘은 어떤 하루였어?','기본'],           '흐림':['바람이 아직 차네.','기본'],       '비':['꽃 다 지겠다.','꽃비',1],        '눈':['늦눈이구나. 앉아.','늦눈',1]},
+    '여름': {'맑음':['오늘 많이 더웠지.','기본'],               '흐림':['바람 한 점 없네.','기본'],        '비':['한바탕 쏟아졌네.','소나기',1],   '눈':['','발생 안 함',0,1]},
+    '장마': {'맑음':['오늘은 개었네.','갠 하늘',1],             '흐림':['눅눅한 날이야.','기본'],          '비':['며칠째 오는구나.','기본'],       '눈':['','발생 안 함',0,1]},
+    '가을': {'맑음':['하늘이 높다.','기본'],                    '흐림':['해가 짧아졌어.','기본'],          '비':['비 오니 춥지.','찬비',1],        '눈':['첫눈이 이르네.','기본']},
+    '겨울': {'맑음':['햇빛이 얇네.','마른 햇빛',1],             '흐림':['하늘이 낮게 앉았어.','기본'],     '비':['진눈깨비네.','기본'],            '눈':['눈 오는 날은 조용하지.','첫눈',1]}
+  };
+
+  static LAYERS = [
+    {n:1, name:'종이 (배경)',   season:'기본 톤을 정한다 — 봄 #FAF7F2 → 겨울 #F5F5F4', weather:'만지지 않는다', sc:'#5B534B', wc:'#BDB2A7'},
+    {n:2, name:'빛 (워시)',     season:'만지지 않는다', weather:'방향·색온도·세기를 정한다 — 맑음은 우상단 따뜻, 비는 낮고 청회', sc:'#BDB2A7', wc:'#5B534B'},
+    {n:3, name:'차 (색)',       season:'차 종류가 곧 색 — 연녹 / 진녹 / 호박 / 대추', weather:'만지지 않는다', sc:'#5B534B', wc:'#BDB2A7'},
+    {n:4, name:'김 (steam)',    season:'기본 세기를 정한다 — 여름 0.08 → 겨울 0.52', weather:'배수만 곱한다 — 맑음 ×1.0 → 눈 ×1.4', sc:'#5B534B', wc:'#5B534B'},
+    {n:5, name:'입자',          season:'입자의 정체를 정한다 — 봄비는 꽃잎이 섞인다', weather:'입자의 유무·속도를 정한다', sc:'#5B534B', wc:'#5B534B'},
+    {n:6, name:'첫마디 · 속도', season:'무엇을 언급할지 — 계절어 한 단어까지', weather:'타이핑 배속 — 비 오는 날은 15% 느리게', sc:'#5B534B', wc:'#5B534B'}
+  ];
+
+  static SPECIALS = [
+    {combo:'봄 × 비',   title:'꽃비',      paper:'#F8F5F1', line:'꽃 다 지겠다.',        rule:'빗방울 8개 중 3개를 꽃잎으로 교체. 낙하 속도 1.3배 느리게, 좌우 흔들림 추가. 마무리 흔적은 이날만 꽃잎 두 장이 겹친 형태.'},
+    {combo:'여름 × 비', title:'소나기',    paper:'#F5F8F2', line:'한바탕 쏟아졌네.',     rule:'빗방울 굵기 +40%, 낙하 2.8초로 가속, 개수 14개. 세션 진입 후 20초가 지나면 입자가 서서히 걷힌다 — 지나가는 비.'},
+    {combo:'장마 × 맑음', title:'갠 하늘', paper:'#F6F8F4', line:'오늘은 개었네.',       rule:'장마 종이 톤을 한 단계 밝게(#F1F3F1 → #F6F8F4). 진입 시 빛 워시가 1.2초에 걸쳐 밝아지는 단 하나의 오프닝 애니메이션.'},
+    {combo:'가을 × 비', title:'찬비',      paper:'#F7F1E7', line:'비 오니 춥지.',        rule:'김 세기 최대치(0.45)로 고정 — 이날이 김이 가장 잘 보이는 날. 잔 지름 +6%로 손에 쥔 느낌을 키운다.'},
+    {combo:'겨울 × 맑음', title:'마른 햇빛', paper:'#F6F6F4', line:'햇빛이 얇네.',       rule:'맑음의 따뜻한 워시를 쓰지 않는다. 우상단 대신 좌상단, 색온도를 차갑게(rgba(232,240,246,.45)) — 겨울 햇빛은 밝지만 데우지 않는다.'},
+    {combo:'겨울 × 눈', title:'첫눈',      paper:'#F4F5F5', line:'눈 오는 날은 조용하지.', rule:'눈 입자 크기 +50%, 낙하 18초로 느리게. 이날 마무리 흔적만 눈꽃 — 캘린더에서 겨울 한 칸이 다르게 남는다.'}
+  ];
+
+  static MOMENTS = [
+    {name:'맑음', what:'전송 직후 빛 워시가 아주 살짝 밝아졌다 돌아온다. 들었다는 신호를 빛으로만.', dur:'400ms', curve:'ease-out', typing:'×1.00'},
+    {name:'흐림', what:'변화 없음. 흐린 날은 아무 일도 일어나지 않는 날로 남긴다.',                  dur:'—',     curve:'—',        typing:'×1.05'},
+    {name:'비',   what:'차 표면에 파문 한 번. 빗방울이 잔에 떨어진 것처럼, 원이 한 번 퍼지고 사라진다.', dur:'700ms', curve:'ease-out', typing:'×1.15'},
+    {name:'눈',   what:'김이 한 번 크게 올랐다 가라앉는다. 추운 날 숨을 내쉰 것처럼.',                dur:'900ms', curve:'ease-in-out', typing:'×1.20'}
+  ];
+
+  static OPENS = [
+    {q:'계절 경계를 무엇으로 자를까', a:'달로 자르면 구현이 단순하지만 3월 1일에 갑자기 봄이 된다. 절기(입춘·입추)나 실제 기온 이동평균이면 자연스럽지만 API 의존이 생긴다.', lean:'제 제안 — 달로 자르고, 경계 ±7일은 두 톤을 섞는다. API 없이 부드러워짐.'},
+    {q:'첫마디가 날씨를 얼마나 언급할까', a:'매일 날씨를 말하면 스몰토크가 되고, 소담이 신선에서 대화 상대로 내려앉는다. 반대로 아예 없으면 계절 UI가 벽지가 된다.', lean:'제 제안 — 예외 조합 6일에만 언급. 나머지는 계절어 한 단어까지.'},
+    {q:'입자를 세션 화면에도 계속 띄울까', a:'말하는 동안 비가 계속 내리면 시선이 분산된다. 다만 캘린더에만 있으면 세션에서 맥락이 사라진다.', lean:'제 제안 — 세션에서는 입자 투명도를 40%로 낮추고, 입력창에 포커스가 들어가면 20%까지.'}
+  ];
+
+  renderVals() {
+    const S = Component.SEASON, W = Component.WEATHER, L = Component.LINES;
+    const wKeys = Object.keys(W);
+    return {
+      layers: Component.LAYERS,
+      specials: Component.SPECIALS,
+      moments: Component.MOMENTS,
+      opens: Component.OPENS,
+      weathers: wKeys.map((k) => ({ key: k, name: k, own: W[k].own })),
+      matrix: Object.keys(S).map((sk) => {
+        const s = S[sk];
+        return {
+          key: sk, name: sk, note: s.note, tea: s.tea, teaName: s.teaName,
+          cells: wKeys.map((wk) => {
+            const w = W[wk], e = L[sk][wk];
+            const blocked = !!e[3];
+            return {
+              key: sk + wk,
+              paper: blocked ? '#F1EFEA' : s.paper,
+              wash: blocked ? 'none' : w.wash,
+              tea: s.tea, steam: blocked ? 0 : Math.min(1, s.steam * w.steamX),
+              particle: blocked ? '—' : w.p,
+              line: blocked ? '' : e[0],
+              tag: e[1], special: !!e[2], blocked
+            };
+          })
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

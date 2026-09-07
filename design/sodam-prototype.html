@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{{const n=new URLSearchParams(location.search).get("theme");if(n==="light"||n==="dark"){document.documentElement.dataset.theme=n}}{if(new URLSearchParams(location.search).get("_omthumb")==="1"){const n=(f)=>{const g=f.focus;if(!g)return;f.focus=function(h){g.call(this,{...h,preventScroll:true})}};n(HTMLElement.prototype);n(SVGElement.prototype);if(typeof MathMLElement!=="undefined"){n(MathMLElement.prototype)}const d=(f)=>{f.removeAttribute("autofocus");f.inert=true;if(!(f instanceof HTMLElement))f.removeAttribute("tabindex")};const p=(f)=>{if(f.hasAttribute("autofocus"))d(f);for(const g of f.querySelectorAll("[autofocus]")){d(g)}};p(document.documentElement);new MutationObserver((f)=>{for(const g of f){for(const h of g.addedNodes){if(h.nodeType===1)p(h)}}}).observe(document,{childList:true,subtree:true})}}{const n=()=>{try{if(document.querySelector('meta[name="color-scheme"]'))return;const d=getComputedStyle(document.documentElement).getPropertyValue("color-scheme").trim();if(d&&d!=="normal")return;const p=(y)=>{if(!y)return null;const m=getComputedStyle(y).backgroundColor.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+%?))?\s*\)$/);if(!m)return null;const w=m[4]==null?1:parseFloat(m[4])/(m[4].endsWith("%")?100:1);if(w<0.99)return null;return[+m[1],+m[2],+m[3]]};const f=p(document.body)||p(document.documentElement);if(!f)return;const g=(y)=>{const m=y/255;return m<=0.04045?m/12.92:((m+0.055)/1.055)**2.4};const h=0.2126*g(f[0])+0.7152*g(f[1])+0.0722*g(f[2]);document.documentElement.style.setProperty("color-scheme",h<0.4?"dark":"light")}catch{}};if(document.readyState==="complete")n();else window.addEventListener("load",n)}var I=["https://claude.ai","https://preview.claude.ai","https://c1662db3-8699-4f77-bcad-68e36e5cece5.claudeusercontent.com"];var B=true;var K=false;var C=()=>{};if(K===true){try{const n=setTimeout.bind(window);const d=1e4;const p=15;const f=1e4;const g=120000;const h=200;const y=(o)=>{try{let r;if(typeof o==="string")r=o;else if(o instanceof URL)r=o.href;else if(typeof Request!=="undefined"&&o instanceof Request)r=o.url;else return null;if(!r)return null;const l=document.baseURI;const i=new URL(r,l);if(i.protocol!=="http:"&&i.protocol!=="https:")return null;if(i.origin!==new URL(l).origin)return null;return i.origin+i.pathname}catch{return null}};const m=new Map;const w=(o)=>{let r=m.get(o);if(!r){if(m.size>=h){const l=m.keys().next().value;if(l!==undefined)m.delete(l)}r={fails:[],until:0,cooldown:f,hard:false};m.set(o,r)}return r};const R=(o)=>{const r=m.get(o);return r!==undefined&&r.until>Date.now()};const O=(o,r)=>{const l=Date.now();const i=w(o);if(r)i.hard=true;if(i.until>l)return;i.fails.push(l);while(i.fails.length>0&&i.fails[0]<=l-d)i.fails.shift();if(i.fails.length>=p){i.until=l+i.cooldown;if(i.hard)i.cooldown=Math.min(i.cooldown*2,g);i.fails.length=0;try{n(()=>{try{S(true)}catch{}},i.until-l+100)}catch{}console.warn("[omelette] asset circuit breaker: pausing requests to "+o+" for "+Math.round((i.until-l)/1000)+"s after "+p+" failures in "+d/1000+"s")}};const e=(o)=>{m.delete(o)};const t=100;const a=new WeakMap;const u=new Set;let s=null;const S=(o)=>{for(const r of Array.from(u)){try{const l=a.get(r);if(l===undefined){u.delete(r);continue}if(o){const i=y(l);if(i!==null&&R(i))continue}a.delete(r);u.delete(r);if(s!==null)s.call(r,l)}catch{}}};C=()=>{try{m.clear();S(false)}catch{}};document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")C()});const _=window.fetch;if(typeof _==="function"){const o=function(...r){let l=null;try{l=y(r[0])}catch{}if(l!==null&&R(l)){let c;try{if(r[1]&&r[1].signal!==undefined){c=r[1].signal||undefined}else if(typeof Request!=="undefined"&&r[0]instanceof Request){c=r[0].signal||undefined}}catch{c=undefined}return new Promise((k,b)=>{const E=()=>{try{return c.reason!==undefined?c.reason:new DOMException("The operation was aborted.","AbortError")}catch{return new DOMException("The operation was aborted.","AbortError")}};try{if(c&&c.aborted){b(E());return}}catch{}let T=false;const j=()=>{if(T)return;T=true;b(E())};try{if(c)c.addEventListener("abort",j,{once:true})}catch{}n(()=>{if(T)return;T=true;try{if(c)c.removeEventListener("abort",j)}catch{}let L;try{L=new Response(null,{status:429,statusText:"Too Many Requests",headers:{"Retry-After":"10"}})}catch{L={ok:false,status:429}}k(L)},250)})}const i=_.apply(window,r);if(l!==null){const c=l;i.then((k)=>{try{if(k.ok)e(c);else if(k.status===401||k.status===403||k.status===404||k.status===429){O(c,k.status!==404)}}catch{}},()=>{})}return i};window.fetch=o}const v=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");if(v!==undefined&&v.set!==undefined&&v.get!==undefined){const o=v.set;s=o;Object.defineProperty(HTMLImageElement.prototype,"src",{configurable:true,enumerable:v.enumerable,get:v.get,set(r){const l=`${r}`;try{const i=y(l);if(i!==null&&R(i)){a.set(this,l);if(u.size<t)u.add(this);return}}catch{}try{a.delete(this);u.delete(this)}catch{}o.call(this,l)}})}try{const o=HTMLImageElement.prototype.setAttribute;HTMLImageElement.prototype.setAttribute=function(r,l){if(arguments.length<2){o.apply(this,arguments);return}if(typeof r==="string"&&r.toLowerCase()==="src"){const i=`${l}`;try{const c=y(i);if(c!==null&&R(c)){a.set(this,i);if(u.size<t)u.add(this);return}a.delete(this);u.delete(this)}catch{}o.call(this,r,i);return}o.call(this,r,l)}}catch{}window.addEventListener("error",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)O(l,true)}}catch{}},true);window.addEventListener("load",(o)=>{try{const r=o.target;if(r instanceof HTMLImageElement){const l=y(r.currentSrc||r.src||"");if(l!==null)e(l);const i=a.get(r);if(i!==undefined){let c=false;try{c=new URL(i,document.baseURI).href===new URL(r.currentSrc||r.src||"",document.baseURI).href}catch{c=false}if(c){a.delete(r);u.delete(r)}}}}catch{}},true)}catch{}}var J=30000;var G=3000;document.addEventListener("DOMContentLoaded",()=>{const n=window.Babel;const d="om-src-id";if(n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[d])){n.registerPlugin(d,({types:h})=>({visitor:{JSXOpeningElement(y,m){const w=y.node;if(w.name&&w.name.type==="JSXMemberExpression")return;for(let t=0;t<w.attributes.length;t++){const a=w.attributes[t];if(a.type==="JSXAttribute"&&a.name&&a.name.name==="data-om-id")return}const R=m.file&&m.file.opts&&m.file.opts.filename||"?";const O=w.loc&&w.loc.start;const e=`jsx:${R}:${w.start??0}:${O?O.line:0}:${O?O.column+1:0}`;w.attributes.push(h.jsxAttribute(h.jsxIdentifier("data-om-id"),h.stringLiteral(e)))}}}))}const p="om-text-extract";let f=false;if(B&&n&&n.registerPlugin&&!(n.availablePlugins&&n.availablePlugins[p])){const h=window.React;if(h&&h.useSyncExternalStore&&h.createElement){f=true;const y={};const m=new Set;let w=0;window.__omTextO=y;window.__omTextSet=(e)=>{for(const t in e){const a=e[t];if(a==null)delete y[t];else y[t]=a}w++;m.forEach((t)=>t())};const R=(e)=>{m.add(e);return()=>m.delete(e)};const O=()=>w;window.__OmT=function e(t){h.useSyncExternalStore(R,O,O);return h.createElement("span",{"data-om-text":t.i,className:"__om-t"},t.i in y?y[t.i]:t.children)};n.registerPlugin(p,({types:e})=>{const t={style:1,script:1,noscript:1,textarea:1,title:1,option:1,text:1,tspan:1,textPath:1};const a={placeholder:1,alt:1,title:1,label:1,"aria-label":1,"aria-description":1,"aria-placeholder":1};const u=(o,r)=>e.logicalExpression("??",e.memberExpression(e.logicalExpression("||",e.memberExpression(e.identifier("window"),e.identifier("__omTextO")),e.objectExpression([])),e.stringLiteral(o),true),r);const s=(o)=>o.file&&o.file.opts&&o.file.opts.filename||"?";const S=(o)=>o.file&&o.file.code||"";const _=(o,r)=>{const l=(c)=>c&&c.start!=null&&c.end!=null&&(c.type==="StringLiteral"||c.type==="TemplateLiteral"&&c.expressions.length===0)?[c.start,c.end]:null;const i=l(r);if(i)return i;if(r&&r.type==="Identifier"){const c=o.scope.getBinding(r.name);if(c&&c.constant&&c.path.node.type==="VariableDeclarator"){return l(c.path.node.init)}}return null};const v=(o,r,l)=>{const i=o.node;let c=false;const k=(E,T)=>{c=true;return e.jsxElement(e.jsxOpeningElement(e.jsxIdentifier("__OmT"),[e.jsxAttribute(e.jsxIdentifier("i"),e.stringLiteral(E))],false),e.jsxClosingElement(e.jsxIdentifier("__OmT")),[T],false)};const b=i.children.map((E)=>{if(E.type==="JSXText"){if(E.start==null||E.end==null)return E;const T=l.slice(E.start,E.end);const j=T.length-T.trimStart().length;const L=T.length-T.trimEnd().length;if(j+L>=T.length)return E;return k(`txt:${r}:${E.start+j}:${E.end-L}`,E)}if(E.type==="JSXExpressionContainer"){const T=_(o,E.expression);if(T)return k(`str:${r}:${T[0]}:${T[1]}`,E)}return E});if(c)i.children=b};return{visitor:{JSXOpeningElement(o,r){const l=o.node;const i=s(r);const c={};for(let k=0;k<l.attributes.length;k++){const b=l.attributes[k];if(b.type!=="JSXAttribute"||!b.name)continue;const E=b.name.name;if(!a[E])continue;if(!b.value||b.value.type!=="StringLiteral")continue;if(b.value.start==null||b.value.end==null)continue;const T=`txt:${i}:${b.value.start}:${b.value.end}`;c[E]=T;b.value=e.jsxExpressionContainer(u(T,e.stringLiteral(b.value.value)))}if(Object.keys(c).length){l.attributes.push(e.jsxAttribute(e.jsxIdentifier("data-om-text-attrs"),e.stringLiteral(JSON.stringify(c))))}},JSXElement(o,r){const l=o.node.openingElement;const i=l&&l.name&&l.name.name;if(i==="__OmT")return;if(typeof i==="string"&&t[i])return;v(o,s(r),S(r))},JSXFragment(o,r){v(o,s(r),S(r))}}}})}}const g=f?["transform-react-jsx-source",d,p]:["transform-react-jsx-source",d];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((h,y)=>{const m=h.getAttribute("data-plugins")||"";const w=g.filter((R)=>m.indexOf(R)<0);if(w.length){h.setAttribute("data-plugins",m?`${m},${w.join(",")}`:w.join(","))}if(!h.hasAttribute("data-filename")){h.setAttribute("data-filename",h.getAttribute("src")||`inline-${y}`)}})});var A=window.parent;var U="not editable here — open the project in the Claude Design editor to save";var W=()=>Promise.resolve({persisted:false,noHost:true,reason:U});var H=W;var M="data/storage.json";var z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.match(/\/projects\/([^/]+)\/serve\//);if(d)return d[1];return n.hostname.split(".")[0]||""}catch{return location.hostname.split(".")[0]||""}};var Z=()=>{try{const n=new URL(document.baseURI);const d=n.pathname.indexOf("/serve/");if(d>=0)return n.origin+n.pathname.slice(0,d+"/serve/".length)+M}catch{}return"./"+M};var x=null;var N=()=>{if(!x){x=fetch(Z(),{cache:"no-store"}).then((n)=>{if(n.ok)return n.text();return n.status===404?"":null}).catch(()=>null).then((n)=>{if(n===null){x=null;return null}const d=new Map;if(!n)return d;let p;try{p=JSON.parse(n)}catch{console.warn("[omelette.storage] "+M+" is not valid JSON; treating the store as unreadable so a save cannot overwrite the "+"hand-edited bytes. Fix the JSON (or delete the file) to re-enable persistence.");x=null;return null}if(p===null||typeof p!=="object"||Array.isArray(p)){console.warn("[omelette.storage] "+M+" doesn't hold a JSON object; treating the store as unreadable so a save cannot "+"overwrite the hand-edited bytes. Make the top level a JSON object to re-enable persistence.");x=null;return null}const f=p;if("data"in f){const g=f.data;if(g===null||typeof g!=="object"||Array.isArray(g)){console.warn("[omelette.storage] "+M+' has a "data" field that is not a JSON object; treating the store as unreadable so a '+'save cannot overwrite the hand-edited bytes. Make "data" a JSON object to re-enable persistence.');x=null;return null}const h=f._meta;const y=h!==null&&typeof h==="object"?h.project:undefined;if(typeof y==="string"&&y!==""&&y!==z())return d;for(const m of Object.keys(g))d.set(m,g[m]);return d}for(const g of Object.keys(f)){if(g!=="_meta")d.set(g,f[g])}return d})}return x};var F=(n)=>H(M,JSON.stringify({_meta:{project:z(),version:1},data:Object.fromEntries(n)},null,2));var D=Promise.resolve();var $=(n)=>{const d=D.then(n);D=d.then(()=>{return},()=>{return});return d};var V=/sk-(?:ant-)?[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{20,}|xox[a-z]-[A-Za-z0-9][A-Za-z0-9-]{9,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;var Y=/password|passwd|secret|api[_-]?key|access[_-]?token|auth[_-]?token|credential/i;var Q=(n,d,p)=>{if(V.test(d)||Y.test(n)&&typeof p==="string"&&p.length>=8){console.warn('[omelette.storage] the value for "'+n+'" looks like a credential. The storage file is a plaintext project file — visible to '+"everyone with project access and copied when the project is duplicated. Do not store secrets here.")}};var q={persisted:false,reason:"could not load the existing store — not overwriting it"};var X={persisted:false,reason:"stored value changed since a failed read — re-read this key before saving"};var P=new Set;var ee={get:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.get: key must be a string"))}return $(N).then((d)=>{if(d===null){P.add(n);return null}P.delete(n);if(!d.has(n))return null;const p=d.get(n);return p==null?null:JSON.parse(JSON.stringify(p))})},set:(n,d)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.set: key must be a string"))}let p;try{p=JSON.stringify(d)}catch(g){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable ("+String(g)+")"))}if(p===undefined){return Promise.reject(new TypeError("storage.set: value must be JSON-serializable"))}Q(n,p,d);const f=JSON.parse(p);return $(()=>N().then((g)=>{if(g===null)return q;if(P.has(n)){if(g.has(n))return X;P.delete(n)}g.set(n,f);return F(g)}))},delete:(n)=>{if(typeof n!=="string"){return Promise.reject(new TypeError("storage.delete: key must be a string"))}return $(()=>N().then((d)=>{if(d===null)return q;if(P.has(n)){if(d.has(n))return X;P.delete(n)}d.delete(n);return F(d)}))},keys:()=>$(N).then((n)=>n===null?[]:Array.from(n.keys()))};window.omelette={writeFile:(n,d)=>H(n,d).then((p)=>{if(!p.persisted&&!p.noHost){throw new Error(p.reason||"write failed")}}),storage:ee};if(A&&A!==window){const n=(e,t)=>{try{A.postMessage({__omelette_log:true,type:e,data:t},"*")}catch{}};["log","warn","error"].forEach((e)=>{const t=console[e];console[e]=(...a)=>{const u=a.map((s)=>{try{return typeof s==="object"?JSON.stringify(s):String(s)}catch{try{return String(s)}catch{return"[unstringifiable]"}}}).join(" ");n(e,u);t.apply(console,a)}});window.addEventListener("error",(e)=>{const t=e.target;if(t&&t!==window&&t.tagName){const a=t.src||t.href||"";n("resource_error",`${t.tagName} failed to load: ${a}`)}else{n("error",`${e.message||"Unknown error"} at ${e.filename||"?"}:${e.lineno||0}:${e.colno||0}`)}},true);window.addEventListener("unhandledrejection",(e)=>{const t=e.reason;const a=t instanceof Error?`${t.message} ${t.stack}`:String(t);n("error",`Unhandled rejection: ${a}`)});window.addEventListener("click",(e)=>{if(e.defaultPrevented||e.button!==0)return;if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const t=e.composedPath?e.composedPath():[];const a=["button","input","select","textarea","summary","label"];let u=null;for(const v of t){if(!(v instanceof Element))continue;if(v.localName==="a"){if(!(v instanceof HTMLAnchorElement))return;u=v;break}if(a.indexOf(v.localName)!==-1)return}if(!u)return;if(u.isContentEditable)return;const s=u.closest("[contenteditable]");if(s&&s.getAttribute("contenteditable")!=="false")return;const S=(u.getAttribute("target")||"_self").toLowerCase();if(S!=="_self"&&S!=="_top"&&S!=="_parent")return;let _;try{_=new URL(u.href)}catch{return}if(_.protocol!=="http:"&&_.protocol!=="https:")return;if(location.origin==="null")return;if(_.origin===location.origin)return;e.preventDefault();window.open(_.href,"_blank","noopener,noreferrer")});const d=()=>{try{A.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(window.ResizeObserver)new ResizeObserver(d).observe(document.documentElement);const p=()=>{d();if(!document.querySelector('script[type="text/babel"],script[type="text/jsx"]'))return;const e=()=>document.getElementById("root")||document.querySelector("body > div[id]");const t=e()?.firstElementChild??null;let a=0;const u=()=>{const s=e();if(s&&s.firstElementChild!==t||++a>30){d();return}setTimeout(u,100)};setTimeout(u,100)};if(document.readyState==="complete")p();else window.addEventListener("load",p);const f={};let g=0;const h=(e)=>new Promise((t,a)=>{if(!I.length){a(new Error("claude.complete: no parent origin"));return}const u=`c${++g}`;const s=()=>setTimeout(()=>{delete f[u];a(new Error(`claude.complete: no data for ${J/1000}s`))},J);const S=s();f[u]={resolve:t,reject:a,text:"",t:S,arm:s};try{for(const _ of I){A.postMessage({__om_api:true,id:u,body:e},_)}}catch(_){clearTimeout(S);delete f[u];a(_)}});const y=8;const m=async(e,t)=>{if(!Array.isArray(e.messages)){throw new Error("claude.complete: tools require a messages array")}const a=e.messages.slice();const u={...e,tools:e.tools.map((_)=>{if(_===null||typeof _!=="object")return _;const v={};for(const o of Object.keys(_)){if(typeof _[o]!=="function")v[o]=_[o]}return v})};const s=u.tool_choice;const S=s!=null&&(s.type==="any"||s.type==="tool")?{...u,tool_choice:s.disable_parallel_tool_use!==undefined?{type:"auto",disable_parallel_tool_use:s.disable_parallel_tool_use}:{type:"auto"}}:u;for(let _=0;_<y;_++){const v=await h({..._===0?u:S,messages:a});const o=v.message;const r=o&&Array.isArray(o.content)?o.content:null;const l=r?r.filter((c)=>c?.type==="tool_use"):[];if(o?.stop_reason!=="tool_use"||l.length===0){return v.text}const i=[];for(const c of l){const k=t.get(c.name);if(!k){i.push({type:"tool_result",tool_use_id:c.id,content:`no handler for tool "${c.name}"`,is_error:true});continue}try{const b=await k(c.input);const E=typeof b==="string"?b:O(b)??"";i.push({type:"tool_result",tool_use_id:c.id,content:E})}catch(b){i.push({type:"tool_result",tool_use_id:c.id,content:String(b?.message??b??"tool handler failed"),is_error:true})}}a.push({role:"assistant",content:r},{role:"user",content:i})}throw new Error(`claude.complete: exceeded ${y} tool turns`)};window.claude={complete(e){const t=e;if(t!==null&&typeof t==="object"&&Array.isArray(t.tools)&&t.tools.some((a)=>a!==null&&typeof a==="object"&&typeof a.run==="function")){const a=new Map;for(const u of t.tools){if(u!==null&&typeof u==="object"&&typeof u.run==="function"){a.set(String(u.name),u.run)}}return m(t,a)}return h(e).then((a)=>a.text)}};const w={};let R=0;H=(e,t)=>new Promise((a)=>{if(!I.length){a({persisted:false,noHost:true,reason:U});return}const u=`f${++R}`;const s=setTimeout(()=>{delete w[u];a({persisted:false,noHost:true,reason:U})},G);w[u]={settle:a,t:s};try{for(const S of I){A.postMessage({__om_file:true,id:u,op:"write",path:e,content:t},S)}}catch{clearTimeout(s);delete w[u];a({persisted:false,noHost:true,reason:U})}});const O=(e)=>{try{return JSON.stringify(e)}catch{return JSON.stringify(String(e))}};window.addEventListener("message",(e)=>{if(I.indexOf(e.origin)<0)return;if(e.source!==A)return;const t=e.data;if(!t)return;if(t.type==="omelette-preview-refresh"){if(typeof t.token!=="string"||!/^[0-9a-f.-]+(\.(rc|pr-[0-9]+))?(\.[0-9]+\.[0-9a-f]{16})?$/.test(t.token))return;const s=Math.max(1,Math.floor((t.expiresAt||0)-Date.now()/1000));document.cookie="__Host-omelette-preview="+t.token+"; Path=/; Secure; SameSite=None; Partitioned; Max-Age="+s;C();return}if(t.__om_file_r){const s=w[t.id];if(!s)return;clearTimeout(s.t);delete w[t.id];s.settle(t.ok?{persisted:true}:{persisted:false,reason:t.error||"write failed"});return}if(t.__om_api_r){const s=f[t.id];if(!s)return;if(t.error!=null){clearTimeout(s.t);delete f[t.id];s.reject(new Error(t.error));return}if(t.chunk!=null){clearTimeout(s.t);s.t=s.arm();s.text+=t.chunk;return}if(t.done){clearTimeout(s.t);delete f[t.id];s.resolve({text:t.text!=null?t.text:s.text,message:t.message});return}return}if(!t.__om_eval)return;const a=t;const u=(s)=>{e.source.postMessage({...s,__om_eval_r:1,id:a.id},e.origin)};try{const s=(0,eval)(a.code);if(s&&typeof s.then==="function"){s.then((S)=>u({ok:1,v:O(S)}),(S)=>u({ok:0,e:String(S)}))}else{u({ok:1,v:O(s)})}}catch(s){u({ok:0,e:String(s)})}})}})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>소담 — 한 잔의 회고</title>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#FAF4E9"/><g stroke="#8E8577" stroke-width="4" fill="none" stroke-linecap="round"><path d="M62 92h76v22a38 38 0 0 1-38 38 38 38 0 0 1-38-38z"/><path d="M138 100h12a13 13 0 0 1 0 26h-12"/><path d="M88 74c0-9 8-11 8-20M112 74c0-9 8-11 8-20" stroke="#BEC99B"/></g></svg></template>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Sodam Voice';src:url('../assets/fonts/KyoboHandwriting2025lyb.ttf') format('truetype');font-display:swap;}
+html,body{margin:0;padding:0;background:#E7E1D7;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+a{color:#6E7A52;text-decoration:none;}
+a:hover{color:#514B45;}
+input,button,textarea{font:inherit;color:inherit;}
+button{border:0;background:none;cursor:pointer;}
+@keyframes sodamFall{0%{transform:translateY(-70px) rotate(4deg);opacity:0}12%{opacity:.55}100%{transform:translateY(960px) rotate(4deg);opacity:.1}}
+@keyframes sodamDrift{0%{transform:translate(0,-50px);opacity:0}14%{opacity:.8}100%{transform:translate(34px,950px);opacity:.05}}
+@keyframes sodamSteam{0%{transform:translateY(10px) scaleX(.9);opacity:0}30%{opacity:1}100%{transform:translateY(-30px) scaleX(1.35);opacity:0}}
+@keyframes sodamIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes sodamFade{from{opacity:0}to{opacity:1}}
+@keyframes sodamCard{from{opacity:0;transform:translateY(28px) rotate(-1.1deg) scale(.965)}to{opacity:1;transform:translateY(0) rotate(-1.1deg) scale(1)}}
+@keyframes sodamPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+</style>
+</helmet>
+
+<div style="position:relative;width:412px;height:892px;overflow:hidden;background:#FAF4E9;font-family:'Noto Sans KR',system-ui,sans-serif;color:#514B45;-webkit-font-smoothing:antialiased;">
+
+  <div style="position:absolute;inset:0;background-image:url('./tex/paper_soft.png');background-size:210px 210px;opacity:.55;mix-blend-mode:multiply;pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:{{ lightWash }}"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(115% 85% at 50% 42%, rgba(255,255,255,0) 42%, rgba(120,104,86,.07) 100%);"></div>
+
+  <sc-if value="{{ isRain }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:8%;top:0;width:9px;animation:sodamFall 5.4s linear -0.2s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:19%;top:0;width:7px;animation:sodamFall 6.8s linear -1.4s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:31%;top:0;width:11px;animation:sodamFall 4.9s linear -3.1s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:44%;top:0;width:8px;animation:sodamFall 6.2s linear -0.9s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:57%;top:0;width:10px;animation:sodamFall 5.7s linear -2.4s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:68%;top:0;width:7px;animation:sodamFall 7.1s linear -4.2s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:79%;top:0;width:9px;animation:sodamFall 5.1s linear -1.9s infinite;">
+      <img src="../assets/images/status_raindrop.png" style="position:absolute;left:90%;top:0;width:8px;animation:sodamFall 6.5s linear -3.6s infinite;">
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isSnow }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+      <div style="position:absolute;left:11%;top:0;width:6px;height:6px;border-radius:50%;background:#fff;filter:blur(1.5px);animation:sodamDrift 11s linear -1s infinite;"></div>
+      <div style="position:absolute;left:24%;top:0;width:4px;height:4px;border-radius:50%;background:#fff;filter:blur(1.2px);animation:sodamDrift 14s linear -5s infinite;"></div>
+      <div style="position:absolute;left:38%;top:0;width:7px;height:7px;border-radius:50%;background:#fff;filter:blur(2px);animation:sodamDrift 9.5s linear -3s infinite;"></div>
+      <div style="position:absolute;left:52%;top:0;width:5px;height:5px;border-radius:50%;background:#fff;filter:blur(1.4px);animation:sodamDrift 12.5s linear -7s infinite;"></div>
+      <div style="position:absolute;left:66%;top:0;width:6px;height:6px;border-radius:50%;background:#fff;filter:blur(1.6px);animation:sodamDrift 10.5s linear -2s infinite;"></div>
+      <div style="position:absolute;left:81%;top:0;width:4px;height:4px;border-radius:50%;background:#fff;filter:blur(1.2px);animation:sodamDrift 13.5s linear -6s infinite;"></div>
+      <div style="position:absolute;left:93%;top:0;width:6px;height:6px;border-radius:50%;background:#fff;filter:blur(1.8px);animation:sodamDrift 11.5s linear -9s infinite;"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onCalendar }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:34px 26px 30px;">
+
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;letter-spacing:2.2px;font-weight:400;color:#81786F;">{{ monthTitle }}</div>
+          <div style="margin-top:7px;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:14px;color:#A69D93;">{{ contextLabel }}</div>
+        </div>
+        <div style="display:flex;gap:2px;padding-top:2px;">
+          <button onClick="{{ prevMonth }}" aria-label="이전 달" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;"><img src="../assets/ui/calendar_prev_default.png" style="width:34px;height:34px;object-fit:contain;"></button>
+          <button onClick="{{ nextMonth }}" aria-label="다음 달" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;"><img src="../assets/ui/calendar_next_default.png" style="width:34px;height:34px;object-fit:contain;"></button>
+        </div>
+      </div>
+
+      <div style="height:172px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding-top:26px;">
+        <div style="position:relative;width:106px;height:66px;display:flex;align-items:flex-end;justify-content:center;">
+          <div style="position:absolute;bottom:52px;left:50%;transform:translateX(-50%);display:flex;gap:9px;opacity:{{ steamOpacity }}">
+            <div style="width:3px;height:26px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.85));filter:blur(2.6px);animation:sodamSteam 5.2s ease-in-out infinite;"></div>
+            <div style="width:3px;height:34px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.9));filter:blur(2.6px);animation:sodamSteam 4.4s ease-in-out -1.6s infinite;"></div>
+            <div style="width:3px;height:24px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.8));filter:blur(2.6px);animation:sodamSteam 5.8s ease-in-out -3s infinite;"></div>
+          </div>
+          <img src="../assets/images/tea_bowl_v1.png" style="width:100px;object-fit:contain;filter:{{ teaFilter }}">
+        </div>
+        <button onClick="{{ openSession }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;min-height:44px;border-radius:999px;border:1px solid #DCD3C6;background:rgba(255,255,255,.42);font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:15px;color:#6E6259;">
+          <span style="white-space:nowrap;">{{ ctaLabel }}</span>
+          <span style="font-size:13px;color:#A69D93;">→</span>
+        </button>
+      </div>
+
+      <div style="display:flex;margin-top:26px;padding-bottom:9px;border-bottom:1px solid #EAE2D6;">
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">M</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">T</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">W</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">T</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">F</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">S</div>
+        <div style="flex:1;text-align:center;font-size:10.5px;letter-spacing:1.3px;font-weight:500;color:#BDB2A7;">S</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:60px;align-content:start;margin-top:8px;">
+        <sc-for list="{{ cells }}" as="cell" hint-placeholder-count="35">
+          <div onClick="{{ cell.tap }}" style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:7px;gap:3px;">
+            <sc-if value="{{ cell.isToday }}" hint-placeholder-val="{{ false }}">
+              <div style="width:29px;height:29px;border-radius:50%;background:#E1E7CB;border:1px solid #BEC99B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#586047;">{{ cell.day }}</div>
+            </sc-if>
+            <sc-if value="{{ cell.plain }}" hint-placeholder-val="{{ true }}">
+              <div style="height:29px;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:300;color:{{ cell.numColor }}">{{ cell.day }}</div>
+            </sc-if>
+            <sc-if value="{{ cell.finished }}" hint-placeholder-val="{{ false }}">
+              <img src="../assets/images/trace_blossom.png" style="width:19px;height:19px;object-fit:contain;">
+            </sc-if>
+            <sc-if value="{{ cell.unfinished }}" hint-placeholder-val="{{ false }}">
+              <img src="../assets/images/status_raindrop.png" style="width:13px;height:13px;object-fit:contain;opacity:.85;">
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:auto;padding-top:12px;border-top:1px solid #EAE2D6;">
+        <div style="display:flex;align-items:center;gap:5px;"><img src="../assets/images/trace_blossom.png" style="width:13px;height:13px;"><span style="font-size:10.5px;color:#B0A69B;">마친 날</span></div>
+        <div style="display:flex;align-items:center;gap:5px;"><img src="../assets/images/status_raindrop.png" style="width:9px;height:9px;opacity:.85;"><span style="font-size:10.5px;color:#B0A69B;">남겨둔 날</span></div>
+        <div style="font-size:10.5px;color:#C2B8AC;">{{ visitLabel }}</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onSession }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;">
+      <div style="position:absolute;top:36px;left:28px;font-size:12px;letter-spacing:1.6px;color:#9A9088;">{{ dateLabel }}</div>
+      <button onClick="{{ backToCalendar }}" aria-label="달력" style="position:absolute;top:26px;right:16px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;"><img src="../assets/ui/calendar_default.png" style="width:32px;height:32px;object-fit:contain;"></button>
+
+      <div style="position:absolute;left:0;right:0;top:104px;bottom:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:300px;min-height:54px;display:flex;align-items:center;justify-content:center;text-align:center;">
+          <span style="font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:18px;line-height:1.55;color:#7E756C;text-wrap:pretty;">{{ teaLine }}</span>
+        </div>
+        <div style="position:relative;width:236px;display:flex;justify-content:center;margin-top:6px;">
+          <div style="position:absolute;bottom:calc(100% - 26px);left:50%;transform:translateX(-50%);display:flex;gap:13px;transition:opacity .6s ease;opacity:{{ cupSteam }}">
+            <div style="width:4px;height:34px;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.8));filter:blur(3.4px);animation:sodamSteam 5.2s ease-in-out infinite;"></div>
+            <div style="width:4px;height:46px;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.85));filter:blur(3.4px);animation:sodamSteam 4.4s ease-in-out -1.6s infinite;"></div>
+            <div style="width:4px;height:30px;border-radius:4px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(163,152,138,.75));filter:blur(3.4px);animation:sodamSteam 5.8s ease-in-out -3s infinite;"></div>
+          </div>
+          <img src="{{ bowlSrc }}" style="width:236px;object-fit:contain;transition:opacity .42s ease;filter:{{ teaFilter }}">
+        </div>
+        <div style="width:300px;min-height:58px;margin-top:2px;display:flex;align-items:flex-start;justify-content:center;text-align:center;">
+          <span style="font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:16px;line-height:1.5;color:#514B45;text-wrap:pretty;">{{ userLine }}</span>
+        </div>
+      </div>
+
+      <sc-if value="{{ canType }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;left:26px;right:26px;bottom:48px;display:flex;align-items:center;gap:4px;min-height:56px;padding-left:20px;padding-right:4px;border:1px solid #DCD3C6;border-radius:30px;background:rgba(255,255,255,.34);">
+          <input value="{{ draft }}" onInput="{{ onDraft }}" onKeyDown="{{ onKey }}" placeholder="천천히 생각나는 대로" style="flex:1;min-width:0;border:0;background:none;outline:none;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:16px;color:#514B45;">
+          <button onClick="{{ send }}" aria-label="보내기" style="width:52px;height:52px;display:flex;align-items:center;justify-content:center;"><img src="{{ sendSrc }}" style="width:46px;height:46px;object-fit:contain;"></button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ cupEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:26px;right:26px;bottom:74px;display:flex;flex-direction:column;align-items:center;gap:10px;animation:sodamIn .34s ease-out both;">
+          <button onClick="{{ refill }}" style="width:224px;min-height:48px;border-radius:999px;background:#E1E7CB;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:16px;color:#5C6349;">한 잔 더 마실래</button>
+          <button onClick="{{ finish }}" style="width:224px;min-height:48px;border-radius:999px;border:1px solid #DCD3C6;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:16px;color:#8E847B;">오늘 이만 마칠래</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onClosing }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;animation:sodamFade .5s ease both;">
+      <div style="position:absolute;top:36px;left:28px;font-size:12px;letter-spacing:1.6px;color:#9A9088;">{{ dateLabel }}</div>
+
+      <div style="position:absolute;left:0;right:0;top:104px;bottom:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:300px;min-height:54px;display:flex;align-items:center;justify-content:center;text-align:center;">
+          <span style="font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:18px;line-height:1.55;color:#9A8F85;text-wrap:pretty;">{{ closingLine }}</span>
+        </div>
+        <button onClick="{{ openFortune }}" aria-label="한 마디 펼치기" style="position:relative;width:236px;height:200px;display:flex;align-items:center;justify-content:center;margin-top:10px;">
+          <img src="../assets/images/closing_saucer.png" style="width:230px;object-fit:contain;">
+          <img src="../assets/images/trace_blossom.png" style="position:absolute;width:30px;object-fit:contain;opacity:{{ blossomOpacity }};transition:opacity .38s ease;animation:sodamPulse 3.6s ease-in-out infinite;">
+        </button>
+        <div style="width:300px;min-height:44px;margin-top:6px;text-align:center;font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:14px;color:#B4A99E;opacity:{{ hintOpacity }};transition:opacity .5s ease;">벚꽃을 누르면, 내일 기억할 한 마디</div>
+      </div>
+
+      <button onClick="{{ backToCalendar }}" style="position:absolute;left:0;right:0;bottom:56px;min-height:44px;font-size:13px;letter-spacing:.6px;color:#A69D93;">달력으로</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onFortune }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;background:rgba(84,74,64,.16);backdrop-filter:blur(2px);animation:sodamFade .3s ease both;">
+      <div style="position:relative;width:302px;padding:34px 30px 26px;border-radius:3px;background:#FCF8F0;background-image:url('./tex/paper_card.png');background-size:150px 150px;box-shadow:0 18px 40px -20px rgba(88,74,58,.45),0 2px 0 rgba(255,255,255,.7) inset;animation:sodamCard .5s cubic-bezier(.2,.8,.2,1) both;">
+        <div style="position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,rgba(140,122,100,.14),rgba(140,122,100,0));"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:1.8px;color:#B4A99E;">
+          <span>{{ fortuneDate }}</span>
+          <span>{{ fortuneSeason }}</span>
+        </div>
+        <div style="height:1px;margin:16px 0 22px;background:#E8DFD1;"></div>
+        <div style="min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;">
+          <span style="font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:22px;line-height:1.6;color:#4E4740;text-wrap:pretty;">{{ fortuneText }}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;">
+          <img src="../assets/images/trace_blossom.png" style="width:14px;height:14px;object-fit:contain;">
+          <span style="font-family:'Sodam Voice','Noto Sans KR',sans-serif;font-size:12px;letter-spacing:.4px;color:#B0A69B;">소담</span>
+        </div>
+      </div>
+      <button onClick="{{ closeFortune }}" style="margin-top:26px;min-height:44px;padding:0 22px;font-size:13px;letter-spacing:.6px;color:#F3EDE3;text-shadow:0 1px 6px rgba(70,60,50,.5);">접어두기</button>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:412,&quot;height&quot;:892},&quot;season&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;봄&quot;,&quot;여름&quot;,&quot;장마&quot;,&quot;가을&quot;,&quot;겨울&quot;],&quot;default&quot;:&quot;가을&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;그날의 맥락&quot;},&quot;weather&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;맑음&quot;,&quot;흐림&quot;,&quot;비&quot;,&quot;눈&quot;],&quot;default&quot;:&quot;맑음&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;그날의 맥락&quot;},&quot;visits&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:1,&quot;max&quot;:60,&quot;default&quot;:38,&quot;unit&quot;:&quot;잔&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;누적 관계&quot;},&quot;sipsPerCup&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:3,&quot;max&quot;:9,&quot;default&quot;:6,&quot;unit&quot;:&quot;모금&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;한 잔의 길이&quot;},&quot;useAI&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;응답 방식&quot;}}">
+class Component extends DCLogic {
+  static S = {
+    '봄':   {paper:'#FAF7F2', tea:'none',                                              steam:.22, name:'봄'},
+    '여름': {paper:'#F7F9F3', tea:'saturate(1.18) hue-rotate(6deg)',                   steam:.07, name:'여름'},
+    '장마': {paper:'#F1F3F1', tea:'saturate(.86) brightness(.99)',                     steam:.16, name:'장마'},
+    '가을': {paper:'#FAF4E9', tea:'sepia(.3) hue-rotate(-6deg) saturate(1.2)',         steam:.34, name:'가을'},
+    '겨울': {paper:'#F5F5F4', tea:'sepia(.46) hue-rotate(-4deg) saturate(1.2) brightness(.97)', steam:.5, name:'겨울'}
+  };
+  static W = {
+    '맑음': {wash:'radial-gradient(120% 78% at 74% 6%, rgba(255,244,214,.5), rgba(255,244,214,0) 58%)', name:'맑음'},
+    '흐림': {wash:'linear-gradient(180deg, rgba(206,209,206,.3), rgba(206,209,206,0) 48%)', name:'흐림'},
+    '비':   {wash:'linear-gradient(180deg, rgba(178,190,193,.38), rgba(178,190,193,.05) 58%)', name:'비'},
+    '눈':   {wash:'radial-gradient(120% 68% at 50% 0%, rgba(255,255,255,.62), rgba(236,241,246,.08) 62%)', name:'눈'}
+  };
+  static BOWLS = [
+    '../assets/images/tea_bowl_empty.png',
+    '../assets/images/tea_bowl_1of6.png',
+    '../assets/images/tea_bowl_2of6.png',
+    '../assets/images/tea_bowl_3of6.png',
+    '../assets/images/tea_bowl_4of6.png',
+    '../assets/images/tea_bowl_5of6.png',
+    '../assets/images/tea_bowl_v1.png'
+  ];
+  static VOICE = {
+    1: {open:'오늘은 어떤 하루였어?',
+        res:['그랬구나.','응, 듣고 있어.','천천히 말해도 돼.','(호로록)','그럴 수 있지.','음, 그래.'],
+        close:'내일 또 들러줘.'},
+    2: {open:'왔네. 오늘은 어땠어?',
+        res:['그래, 그런 날도 있지.','(호로록) 애썼네.','음… 조금 더 들어볼까.','그 말, 오래 참았구나.','오늘은 목소리가 낮네.','그럴 만했네.'],
+        close:'오늘도 잘 마쳤네.'},
+    3: {open:'자네구먼. 앉아.',
+        res:['자네도 참.','그럼, 그럴 수 있지.','(호로록) 오래 왔네, 자네.','말 안 해도 알겠어.','……','자네 얘기는 늘 뒤가 있지.'],
+        close:'가서 푹 쉬어, 자네.'}
+  };
+  static FORTUNE = ['오늘 한 말은 여기 두고 가.','서둘러 답을 찾지 않아도 돼.','내일의 자네가 알아서 할 거야.','잘 지나간 하루도 하루야.','한 모금씩이면 충분해.','애쓴 건 자네만 알아도 돼.'];
+  static MONTHS = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  static MON3 = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  static SYS = '너는 모바일 앱 "소담" 안에서 사람의 하루를 들어주는 존재다. 깊은 산 오래된 다실의 할머니이자 신선 같은 말투. 반말. 조언·해결책·질문·칭찬 금지. 판단하지 않고 그저 받아준다. 한 문장, 24자 이내. 이모지·따옴표·마크다운 금지.';
+
+  state = {
+    screen: 'calendar',
+    level: 6, sips: 0, cups: 1,
+    teaLine: '', userLine: '', draft: '',
+    closingLine: '', showBlossom: false, showHint: false,
+    fortuneText: '', fortuneDate: '', fortuneSeason: '', fortuneFrom: 'closing',
+    monthOffset: 0, busy: false, days: {}, visits: 0
+  };
+
+  gen = 0;
+
+  componentDidMount() {
+    const seeded = this.seed();
+    this.setState({ days: seeded.days, visits: seeded.visits });
+  }
+
+  // ── context ──────────────────────────────────────────
+  get season() { return Component.S[this.props.season] ? this.props.season : '가을'; }
+  get weather() { return Component.W[this.props.weather] ? this.props.weather : '맑음'; }
+  get stage() {
+    const v = this.state.visits;
+    if (v <= 6) return 1;
+    if (v <= 20) return 2;
+    return 3;
+  }
+  get voice() { return Component.VOICE[this.stage]; }
+  get maxSips() { return Math.max(3, Math.min(9, this.props.sipsPerCup ?? 6)); }
+
+  today() { return new Date(); }
+  key(d) {
+    const p = (n) => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  // ── seeded history so the calendar reads like a used app ──
+  seed() {
+    const t = this.today();
+    const days = {};
+    let visits = 0;
+    for (let back = 1; back <= 64; back++) {
+      const d = new Date(t.getFullYear(), t.getMonth(), t.getDate() - back);
+      const m = (d.getDate() * 7 + d.getMonth() * 3) % 5;
+      if (m < 3) {
+        days[this.key(d)] = { status: 'finished', fortune: Component.FORTUNE[(d.getDate() + back) % Component.FORTUNE.length] };
+        visits++;
+      } else if (m === 3) {
+        days[this.key(d)] = { status: 'unfinished' };
+        visits++;
+      }
+    }
+    const forced = this.props.visits;
+    return { days, visits: (forced === undefined || forced === null) ? visits : forced };
+  }
+
+  pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+
+  async wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  async type(text, gen) {
+    const chars = Array.from(text);
+    for (let i = 0; i < chars.length; i++) {
+      const c = chars[i];
+      const d = '.,!?'.includes(c) ? 190 + Math.random() * 60 : c === ' ' ? 60 + Math.random() * 40 : 92 + Math.random() * 52;
+      await this.wait(d);
+      if (gen !== this.gen) return;
+      this.setState({ teaLine: chars.slice(0, i + 1).join('') });
+    }
+  }
+
+  async ai(userPrompt, fallback) {
+    if (this.props.useAI === false) return fallback;
+    try {
+      if (!(window.claude && window.claude.complete)) return fallback;
+      const out = await window.claude.complete({
+        system: Component.SYS,
+        messages: [{ role: 'user', content: userPrompt }]
+      });
+      const line = String(out || '').trim().split('\n')[0].replace(/^["'`\s]+|["'`\s]+$/g, '');
+      return line && line.length <= 40 ? line : fallback;
+    } catch (e) { return fallback; }
+  }
+
+  said = [];
+
+  // ── flow ─────────────────────────────────────────────
+  openSession = async () => {
+    const gen = ++this.gen;
+    this.said = [];
+    this.setState({ screen: 'session', level: this.maxSips, sips: 0, cups: 1, teaLine: '', userLine: '', draft: '', busy: true });
+    await this.wait(620);
+    if (gen !== this.gen) return;
+    await this.type(this.voice.open, gen);
+    if (gen === this.gen) this.setState({ busy: false });
+  };
+
+  backToCalendar = () => { this.gen++; this.setState({ screen: 'calendar', busy: false }); };
+
+  onDraft = (e) => this.setState({ draft: e.target.value });
+  onKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.send(); } };
+
+  send = async () => {
+    const text = (this.state.draft || '').trim();
+    if (!text || this.state.busy || this.state.sips >= this.maxSips) return;
+    const gen = ++this.gen;
+    this.said.push(text);
+
+    this.setState({ userLine: text, teaLine: '', draft: '', busy: true });
+    await this.wait(340);
+    if (gen !== this.gen) return;
+
+    const sips = Math.min(this.maxSips, this.state.sips + 1);
+    this.setState({ sips, level: this.maxSips - sips });
+    await this.wait(430);
+    if (gen !== this.gen) return;
+
+    const last = sips >= this.maxSips;
+    let line = this.pick(this.voice.res);
+    if (last) {
+      line = await this.ai(
+        '사람이 오늘 이런 이야기를 했다: ' + this.said.join(' / ') + '\n찻잔이 비었다. 헤어지기 전 마지막 한 마디를 한 문장으로.',
+        line
+      );
+      if (gen !== this.gen) return;
+    }
+    await this.type(line, gen);
+    if (gen !== this.gen) return;
+
+    if (last) {
+      await this.wait(700);
+      if (gen !== this.gen) return;
+      this.setState({ teaLine: '잔이 비었어요', userLine: '', busy: false });
+    } else {
+      this.setState({ busy: false });
+    }
+  };
+
+  refill = async () => {
+    const gen = ++this.gen;
+    const m = this.maxSips;
+    this.setState({ sips: 0, cups: this.state.cups + 1, teaLine: '', userLine: '', level: 0, busy: true });
+    for (const [d, v] of [[140, Math.round(m * .35)], [170, Math.round(m * .7)], [180, m]]) {
+      await this.wait(d);
+      if (gen !== this.gen) return;
+      this.setState({ level: v });
+    }
+    await this.wait(280);
+    if (gen !== this.gen) return;
+    await this.type(this.stage === 3 ? '그래, 더 앉아 있어.' : '한 잔 더 우렸어.', gen);
+    if (gen === this.gen) this.setState({ busy: false });
+  };
+
+  finish = async () => {
+    const gen = ++this.gen;
+    const t = this.today();
+    this.setState({ screen: 'closing', closingLine: '', showBlossom: false, showHint: false, busy: true });
+    await this.wait(560);
+    if (gen !== this.gen) return;
+    this.setState({ showBlossom: true });
+
+    const close = await this.ai(
+      '사람이 오늘 이런 이야기를 했다: ' + (this.said.join(' / ') || '별말 없었다') + '\n찻잔을 치우며 건네는 작별 한 마디를 한 문장으로.',
+      this.voice.close
+    );
+    if (gen !== this.gen) return;
+    this.setState({ closingLine: close });
+    await this.wait(1400);
+    if (gen !== this.gen) return;
+    this.setState({ showHint: true, busy: false });
+
+    const days = Object.assign({}, this.state.days);
+    days[this.key(t)] = { status: 'finished', fortune: '' };
+    this.setState({ days, visits: this.state.visits + 1 });
+  };
+
+  openFortune = async () => {
+    const t = this.today();
+    const fallback = this.pick(Component.FORTUNE);
+    this.setState({
+      screen: 'fortune', fortuneFrom: 'closing', fortuneText: '',
+      fortuneDate: t.getDate() + ' ' + Component.MON3[t.getMonth()],
+      fortuneSeason: Component.S[this.season].name + ' · ' + Component.W[this.weather].name
+    });
+    const line = await this.ai(
+      '사람이 오늘 이런 이야기를 했다: ' + (this.said.join(' / ') || '별말 없었다') + '\n내일 이 사람이 기억하면 좋을 한 마디를 20자 이내 한 줄로. 교훈이나 지시가 아니라 그저 남겨두는 말.',
+      fallback
+    );
+    const days = Object.assign({}, this.state.days);
+    days[this.key(t)] = { status: 'finished', fortune: line };
+    this.setState({ fortuneText: line, days });
+  };
+
+  openPast = (dateKey) => {
+    const rec = this.state.days[dateKey];
+    if (!rec || rec.status !== 'finished') return;
+    const [y, m, d] = dateKey.split('-').map(Number);
+    const mo = m - 1;
+    const season = mo <= 1 || mo === 11 ? '겨울' : mo <= 4 ? '봄' : mo === 5 || mo === 6 ? '장마' : mo === 7 ? '여름' : '가을';
+    this.setState({
+      screen: 'fortune', fortuneFrom: 'calendar',
+      fortuneText: rec.fortune || this.pick(Component.FORTUNE),
+      fortuneDate: d + ' ' + Component.MON3[mo],
+      fortuneSeason: season
+    });
+  };
+
+  closeFortune = () => this.setState({ screen: 'calendar' });
+
+  shiftMonth = (n) => this.setState({ monthOffset: this.state.monthOffset + n });
+
+  // ── calendar model ───────────────────────────────────
+  buildCells() {
+    const t = this.today();
+    const base = new Date(t.getFullYear(), t.getMonth() + this.state.monthOffset, 1);
+    const daysIn = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
+    const lead = (base.getDay() + 6) % 7;
+    const rows = Math.ceil((lead + daysIn) / 7);
+    const out = [];
+    for (let i = 0; i < rows * 7; i++) {
+      const day = i - lead + 1;
+      if (day < 1 || day > daysIn) { out.push({ key: 'e' + i, day: '', tap: () => {}, plain: false, isToday: false, finished: false, unfinished: false, numColor: 'transparent' }); continue; }
+      const d = new Date(base.getFullYear(), base.getMonth(), day);
+      const k = this.key(d);
+      const rec = this.state.days[k];
+      const isToday = k === this.key(t);
+      const future = d > t && !isToday;
+      out.push({
+        key: k, day: String(day), isToday, plain: !isToday,
+        numColor: future ? '#D2C9BE' : '#A69D93',
+        finished: !!rec && rec.status === 'finished',
+        unfinished: !!rec && rec.status === 'unfinished',
+        tap: isToday ? this.openSession : (rec && rec.status === 'finished' ? () => this.openPast(k) : () => {})
+      });
+    }
+    return out;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const S = Component.S[this.season];
+    const W = Component.W[this.weather];
+    const t = this.today();
+    const vm = new Date(t.getFullYear(), t.getMonth() + s.monthOffset, 1);
+    const cupEmpty = s.screen === 'session' && s.sips >= this.maxSips && !s.busy;
+
+    return {
+      lightWash: W.wash,
+      teaFilter: S.tea,
+      steamOpacity: S.steam,
+      cupSteam: s.level > 0 ? S.steam : 0,
+      isRain: this.weather === '비',
+      isSnow: this.weather === '눈',
+
+      onCalendar: s.screen === 'calendar',
+      onSession: s.screen === 'session',
+      onClosing: s.screen === 'closing',
+      onFortune: s.screen === 'fortune',
+
+      monthTitle: Component.MONTHS[vm.getMonth()] + ' ' + vm.getFullYear(),
+      contextLabel: S.name + ' · ' + W.name,
+      visitLabel: s.visits + '번째 잔',
+      ctaLabel: this.stage === 3 ? '자네 자리, 그대로 있어' : this.stage === 2 ? '오늘의 잔' : '오늘 한 잔 마시기',
+      cells: this.buildCells(),
+      prevMonth: () => this.shiftMonth(-1),
+      nextMonth: () => this.shiftMonth(1),
+      openSession: this.openSession,
+      backToCalendar: this.backToCalendar,
+
+      dateLabel: t.getDate() + ' ' + Component.MON3[t.getMonth()],
+      teaLine: s.teaLine,
+      userLine: s.userLine,
+      bowlSrc: Component.BOWLS[Math.max(0, Math.min(6, Math.round((s.level / this.maxSips) * 6)))],
+      draft: s.draft,
+      onDraft: this.onDraft,
+      onKey: this.onKey,
+      send: this.send,
+      sendSrc: (s.draft || '').trim() && !s.busy ? '../assets/ui/send_default.png' : '../assets/ui/send_disabled.png',
+      canType: s.screen === 'session' && !cupEmpty,
+      cupEmpty,
+      refill: this.refill,
+      finish: this.finish,
+
+      closingLine: s.closingLine,
+      blossomOpacity: s.showBlossom ? 1 : 0,
+      hintOpacity: s.showHint ? 1 : 0,
+      openFortune: this.openFortune,
+
+      fortuneText: s.fortuneText,
+      fortuneDate: s.fortuneDate,
+      fortuneSeason: s.fortuneSeason,
+      closeFortune: this.closeFortune
+    };
+  }
+}
+</script>
+</body>
+</html>
