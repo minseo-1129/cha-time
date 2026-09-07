@@ -576,13 +576,14 @@ class _ChaCalendarScreenState extends State<ChaCalendarScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 112,
-                          height: 76,
+                          width: 106,
+                          height: 66,
                           child: Stack(
+                            clipBehavior: Clip.none,
                             alignment: Alignment.bottomCenter,
                             children: [
                               Positioned(
-                                top: 0,
+                                bottom: 52,
                                 child: Steam(
                                   opacity: min(
                                     .72,
@@ -1231,10 +1232,11 @@ class _ChaSessionScreenState extends State<ChaSessionScreen> {
                             width: 236,
                             height: 205,
                             child: Stack(
+                              clipBehavior: Clip.none,
                               alignment: Alignment.bottomCenter,
                               children: [
                                 Positioned(
-                                  top: 0,
+                                  bottom: 179,
                                   child: Steam(
                                     opacity: _visualSips >= kSipsPerCup
                                         ? 0
