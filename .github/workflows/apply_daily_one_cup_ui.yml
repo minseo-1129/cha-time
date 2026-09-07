@@ -21,18 +21,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - name: Apply daily one-cup UI patch
-        run: python3 tooling/apply_daily_one_cup_ui.py
+      - name: Fix empty-cup restore state
+        run: python3 tooling/fix_empty_restore.py
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze
         run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Commit verified changes
+      - name: Commit verified fix
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add lib/cha_time_app.dart test/widget_test.dart README.md TYPEFACE.md pubspec.lock
-          git commit -m "Limit cha-time to one cup per day and unify actions"
+          git add lib/cha_time_app.dart
+          git commit -m "Restore completed daily cup directly to empty state"
           git push origin HEAD:implementation/daily-one-cup-ui
