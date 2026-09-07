@@ -1,0 +1,38 @@
+name: boost-snow-visibility
+
+on:
+  push:
+    branches:
+      - implementation/snow-visibility
+    paths:
+      - .github/workflows/boost_snow_visibility.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: implementation/snow-visibility
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Apply snow visibility patch
+        run: python3 tooling/boost_snow_visibility.py
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Test
+        run: flutter test
+      - name: Commit verified fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/season_specials.dart
+          git commit -m "Make snow ambience more visible"
+          git push origin HEAD:implementation/snow-visibility
