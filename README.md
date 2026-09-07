@@ -27,8 +27,12 @@ The current implementation is in:
 
 - `lib/main.dart`
 - `lib/cha_time_app.dart`
+- `lib/weather_context.dart`
+- `lib/season_specials.dart`
 
-It includes calendar persistence, 6-sip cup progression, refill animation, closing/fortune flow, past finished-day fortune access, relationship progression, seasonal styling, weather visual states, and migration from the previous `tea_sessions_v1` local storage format.
+It includes calendar persistence, 6-sip cup progression, refill animation, closing/fortune flow, past finished-day fortune access, relationship progression, seasonal styling, live weather ambience, and migration from the previous `tea_sessions_v1` local storage format.
+
+The six Season Matrix exceptions are implemented: 꽃비, 소나기, 갠 하늘, 찬비, 마른 햇빛, 첫눈.
 
 ## Voice font
 
@@ -36,9 +40,17 @@ The intended voice typeface is the locally licensed Kyobo Handwriting 2025 font.
 
 The release script refuses to build an AAB when no `.ttf`/`.otf` exists in `assets/fonts/`, preventing an accidental system-font release.
 
-## Weather integration status
+## Live weather and rainy-season ambience
 
-Season selection is implemented from the local calendar. The weather visual system is implemented, but live weather data is not connected yet. Until a production weather provider is selected, the app defaults to `clear` and QA can exercise the other visual states with a Dart define, for example:
+cha-time requests foreground approximate location while the app is open and sends the coordinate directly to Open-Meteo to retrieve current local weather plus a short recent/forecast precipitation window.
+
+Latitude/longitude are not persisted in reflection records. The saved daily record keeps only the resulting season/weather context needed to reproduce that day's visual trace. If location permission, location services, or the network is unavailable, the app falls back to its normal calendar-season ambience without blocking the reflection flow.
+
+The 장마 layer is data-driven rather than tied to fixed June/July dates. A sustained warm-rain pattern is inferred from recent + forecast Open-Meteo precipitation data. This is a cha-time ambience rule, not an official meteorological declaration of 장마.
+
+When live weather is active, the app shows a small `Weather data by Open-Meteo` attribution link.
+
+For visual QA, weather can still be overridden without changing production logic:
 
 ```bash
 flutter run --dart-define=CHA_TIME_WEATHER=rain
@@ -48,7 +60,7 @@ Supported QA values: `clear`, `cloudy`, `rain`, `snow`.
 
 ## Generative text status
 
-The app currently uses the prototype's local authored/fallback text. A production AI backend is intentionally not hard-coded into the client. Connecting generative last-line/fortune behavior requires a chosen backend/provider and secure server-side credentials.
+Generative AI is intentionally deferred. The current release uses constrained local authored/fallback responses and fortune lines. Do not place an OpenAI or other provider API key in the Flutter client; future AI should be connected through a secure backend/serverless endpoint.
 
 ## Release
 
