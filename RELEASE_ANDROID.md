@@ -20,7 +20,7 @@ Commit `f1cc9c4` removed those obsolete resources. A fresh post-cleanup release 
 Run:
 
 ```bash
-cd /c/dev/doodle
+cd /c/dev/cha-time
 git pull origin main
 bash scripts/build_release.sh
 ```
@@ -29,13 +29,33 @@ Only treat the bundle as release-ready after that command succeeds.
 
 ## 1. Upload keystore
 
-The upload keystore is created once and stored locally:
+Tea uses the same local key layout as the other Android projects. Keep the upload key outside the Git repository:
 
 ```text
-android/upload-keystore.jks
+C:\dev\keys\tea-upload-key.jks
 ```
 
-Back it up securely. Never commit it.
+Git Bash path:
+
+```text
+C:/dev/keys/tea-upload-key.jks
+```
+
+If a Tea upload key has already been used for `com.teawithyou.app` in Play Console, keep using that exact key. Do not generate a replacement key.
+
+If Tea has never been uploaded to Play and no Tea upload key exists yet, create it once:
+
+```bash
+mkdir -p /c/dev/keys
+keytool -genkeypair -v \
+  -keystore C:/dev/keys/tea-upload-key.jks \
+  -keyalg RSA \
+  -keysize 2048 \
+  -validity 10000 \
+  -alias upload
+```
+
+Back up the keystore securely. Never commit it.
 
 ## 2. android/key.properties
 
@@ -45,16 +65,24 @@ Local-only file:
 android/key.properties
 ```
 
+Create it from the example if needed:
+
+```bash
+cp android/key.properties.example android/key.properties
+```
+
 Expected shape:
 
 ```properties
 storePassword=YOUR_STORE_PASSWORD
 keyPassword=YOUR_KEY_PASSWORD
 keyAlias=upload
-storeFile=../upload-keystore.jks
+storeFile=C:/dev/keys/tea-upload-key.jks
 ```
 
-Both the keystore and `key.properties` must remain out of Git.
+Use forward slashes in `storeFile` on Windows.
+
+Both the keystore and `key.properties` must remain out of Git. `android/.gitignore` excludes `key.properties`, `*.keystore`, and `*.jks`.
 
 ## 3. Build the release bundle
 
@@ -62,7 +90,7 @@ Both the keystore and `key.properties` must remain out of Git.
 bash scripts/build_release.sh
 ```
 
-The script runs:
+The script checks the keystore path referenced by `android/key.properties`, then runs:
 
 - `flutter clean`
 - `flutter pub get`
@@ -129,6 +157,6 @@ version: 1.0.0+4
 
 Never commit or send:
 
-- `android/upload-keystore.jks`
+- `C:\dev\keys\tea-upload-key.jks`
 - `android/key.properties`
 - any keystore password
